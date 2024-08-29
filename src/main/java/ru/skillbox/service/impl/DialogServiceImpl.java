@@ -27,9 +27,7 @@ import java.util.stream.Collectors;
 public class DialogServiceImpl implements DialogService {
 
     private final AccountRepository accountRepository;
-
     private final DialogRepository dialogRepository;
-
     private final MessageRepository messageRepository;
 
 
@@ -159,29 +157,29 @@ public class DialogServiceImpl implements DialogService {
         }
         return AccountDto.builder()
                 .id(account.getId())
-                .email(account.getEmail())
-                .phone(account.getPhone())
-                .photo(account.getPhoto())
-                .about(account.getAbout())
-                .city(account.getCity())
-                .country(account.getCountry())
-                .token(account.getToken())
-                .statusCode(account.getStatusCode())
+//                .email(account.getEmail())
+//                .phone(account.getPhone())
+//                .photo(account.getPhoto())
+//                .about(account.getAbout())
+//                .city(account.getCity())
+//                .country(account.getCountry())
+//                .token(account.getToken())
+//                .statusCode(account.getStatusCode())
                 .firstName(account.getFirstName())
                 .lastName(account.getLastName())
-                .regDate(account.getRegDate())
-                .birthDate(account.getBirthDate())
-                .messagePermission(account.getMessagePermission())
-                .lastOnlineTime(account.getLastOnlineTime())
-                .isOnline(account.getIsOnline())
-                .isBlocked(account.getIsBlocked())
-                .isDeleted(account.getIsDeleted())
-                .photoId(account.getPhotoId())
-                .photoName(account.getPhotoName())
-                .role(account.getRole())
-                .createdOn(account.getCreatedOn())
-                .updatedOn(account.getUpdatedOn())
-                .password(account.getPassword())  // ????
+//                .regDate(account.getRegDate())
+//                .birthDate(account.getBirthDate())
+//                .messagePermission(account.getMessagePermission())
+//                .lastOnlineTime(account.getLastOnlineTime())
+//                .isOnline(account.getIsOnline())
+//                .isBlocked(account.getIsBlocked())
+//                .isDeleted(account.getIsDeleted())
+//                .photoId(account.getPhotoId())
+//                .photoName(account.getPhotoName())
+//                .role(account.getRole())
+//                .createdOn(account.getCreatedOn())
+//                .updatedOn(account.getUpdatedOn())
+//                .password(account.getPassword())  // ????
                 .build();
     }
 

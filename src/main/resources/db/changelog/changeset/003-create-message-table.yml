@@ -1,0 +1,57 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-message
+      author: Aleksey Chernov
+      changes:
+        - createTable:
+            tableName: messages
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: time
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: status
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message_text
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: author_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: account_message_author_fk
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: recipient_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: account_message_recipient_fk
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
+              - column:
+                  name: dialog_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: dialog_message_fk
+                    referencedTableName: dialogs
+                    referencedColumnNames: id
+                    nullable: false
+
+

@@ -1,0 +1,9 @@
+databaseChangeLog:
+    - include:
+          file: db/changelog/changeset/001-create-account-table.yml
+    - include:
+          file: db/changelog/changeset/002-create-dialog-table.yml
+    - include:
+          file: db/changelog/changeset/003-create-message-table.yml
+    - include:
+          file: db/changelog/changeset/004-insert-data.sql

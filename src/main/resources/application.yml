@@ -1,11 +1,32 @@
+server:
+  port: 8089
 spring:
+  kafka:
+    bootstrap-servers: localhost:9093
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yml
   jpa:
-    generate-ddl: true
+#    generate-ddl: true
+    open-in-view: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/app_db
+    url: jdbc:postgresql://localhost:5432/social-network-dialog
     username: postgres
     password: postgres
     hikari:
-      schema: app_schema
-      connection-init-sql: create schema if not exists app_schema
+      schema: dialog_schema
+      connection-init-sql: create schema if not exists dialog_schema
       connection-timeout: 10000
+app:
+  kafka:
+    kafkaAuthTopic: "auth-topic"
+    kafkaNewAccountTopic: "new-account-topic"
+    kafkaMessageGroupId: "kafka-message-group-id"
+
+  rabbitMQ:
+    host: localhost
+    port: 5672
+    login: "guest"
+    password: "guest"
+
+#89.111.174.153

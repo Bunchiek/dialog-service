@@ -1,1 +1,1 @@
-create schema if not exists app_schema;
+create schema if not exists dialog_schema;

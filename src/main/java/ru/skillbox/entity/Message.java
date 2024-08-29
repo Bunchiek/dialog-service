@@ -1,6 +1,7 @@
 package ru.skillbox.entity;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +10,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
+@Builder
 @Table(name = "messages")
 public class Message {
 
@@ -37,5 +39,4 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "dialog_id")
     private Dialog dialog;
-
 }

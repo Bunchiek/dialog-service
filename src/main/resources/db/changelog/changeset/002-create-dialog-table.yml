@@ -1,0 +1,29 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: create-dialog
+      author: Aleksey Chernov
+      changes:
+        - createTable:
+            tableName: dialogs
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: unread_count
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: conversation_partner_id
+                  type: bigint
+                  constraints:
+                    foreignKeyName: account_dialog_fk
+                    referencedTableName: accounts
+                    referencedColumnNames: id
+                    nullable: false
