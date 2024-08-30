@@ -14,19 +14,17 @@ import ru.skillbox.repository.MessageRepository;
 
 @Service
 @RequiredArgsConstructor
-public class MessageService {
-
+public class MessageConsumerService {
 
     private final MessageRepository messageRepository;
     private final AccountRepository accountRepository;
     private final DialogRepository dialogRepository;
 
-
     @Transactional
     public void saveMessage(MessageDto messageDTO) {
         Account author = accountRepository.findById(messageDTO.getAuthorId()).orElseThrow();
         Account recipient = accountRepository.findById(messageDTO.getRecipientId()).orElseThrow();
-//        Dialog dialog = dialogRepository.findById(messageDTO.getDialogId()).orElseThrow();
+        Dialog dialog = dialogRepository.findById(1L).orElseThrow();
 
         Message message = Message.builder()
                 .time(messageDTO.getTime())
@@ -34,9 +32,8 @@ public class MessageService {
                 .recipient(recipient)
                 .messageText(messageDTO.getMessageText())
                 .status(Status.SENT)
-//                .dialog(dialog)
+                .dialog(dialog)
                 .build();
-
         messageRepository.save(message);
 
     }

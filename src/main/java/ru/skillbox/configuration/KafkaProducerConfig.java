@@ -14,7 +14,6 @@ import org.springframework.kafka.config.ConcurrentKafkaListenerContainerFactory;
 import org.springframework.kafka.core.*;
 import org.springframework.kafka.support.serializer.JsonDeserializer;
 import org.springframework.kafka.support.serializer.JsonSerializer;
-import ru.skillbox.dto.User;
 import ru.skillbox.dto.kafka.KafkaAuthEvent;
 import ru.skillbox.dto.kafka.KafkaNewAccountEvent;
 
@@ -53,9 +52,6 @@ public class KafkaProducerConfig {
 
         return factory;
     }
-
-
-
 
     @Bean
     public ProducerFactory<String, KafkaAuthEvent> producerFactory() {

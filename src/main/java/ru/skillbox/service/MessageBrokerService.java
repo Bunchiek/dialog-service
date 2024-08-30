@@ -1,21 +1,22 @@
-package ru.skillbox.configuration;
+package ru.skillbox.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageDto;
-import ru.skillbox.service.MessageService;
-
-import java.time.Instant;
 
 @Component
 @RequiredArgsConstructor
-public class MessageReceiver {
+@Slf4j
+public class MessageBrokerService {
 
-    private final MessageService messageService;
+    private final MessageConsumerService messageConsumerService;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageDto messageDTO) {
-        messageService.saveMessage(messageDTO);
+        log.info("Объект из rabbitmq {}",messageDTO);
+        messageConsumerService.saveMessage(messageDTO);
     }
 }

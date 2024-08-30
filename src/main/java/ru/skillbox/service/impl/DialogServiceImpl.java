@@ -188,12 +188,12 @@ public class DialogServiceImpl implements DialogService {
             return null;
         }
         return MessageDto.builder()
-                .id(message.getId())
+//                .id(message.getId())
                 .time(message.getTime())
                 .authorId(message.getAuthor().getId())
                 .recipientId(message.getRecipient().getId())
                 .messageText(message.getMessageText())
-                .status(message.getStatus())
+//                .status(message.getStatus())
                 .build();
     }
 

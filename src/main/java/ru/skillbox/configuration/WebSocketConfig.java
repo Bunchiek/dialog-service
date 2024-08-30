@@ -7,9 +7,10 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
 
+
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer  {
 
 
     @Value("${app.rabbitMQ.host}")
@@ -24,15 +25,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Value("${app.rabbitMQ.password}")
     private String rabbitMqPassword;
 
-
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableStompBrokerRelay("/queue", "/topic")
+        config.enableStompBrokerRelay("/topic")
                 .setRelayHost(rabbitMqHost)
-                .setRelayPort(rabbitMqPort)
+                .setRelayPort(rabbitMqPort) // Порт STOMP
                 .setClientLogin(rabbitMqLogin)
                 .setClientPasscode(rabbitMqPassword);
-
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -42,7 +41,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
+
 }
 
 
-//setAllowedOriginPatterns
