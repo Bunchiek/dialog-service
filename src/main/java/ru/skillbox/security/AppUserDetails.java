@@ -1,6 +1,5 @@
 package ru.skillbox.security;
 
-import com.example.spring_jwt_auth_example.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

@@ -1,6 +1,5 @@
 package ru.skillbox.security.jwt;
 
-import com.example.spring_jwt_auth_example.security.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,12 +1,5 @@
 package ru.skillbox.security;
 
-import com.example.spring_jwt_auth_example.entity.RefreshToken;
-import com.example.spring_jwt_auth_example.entity.User;
-import com.example.spring_jwt_auth_example.excepition.RefreshTokenException;
-import com.example.spring_jwt_auth_example.repository.UserRepository;
-import com.example.spring_jwt_auth_example.security.jwt.JwtUtils;
-import com.example.spring_jwt_auth_example.service.RefreshTokenService;
-import com.example.spring_jwt_auth_example.web.model.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

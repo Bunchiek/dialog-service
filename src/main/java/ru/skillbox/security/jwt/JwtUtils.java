@@ -1,6 +1,5 @@
 package ru.skillbox.security.jwt;
 
-import com.example.spring_jwt_auth_example.security.AppUserDetails;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

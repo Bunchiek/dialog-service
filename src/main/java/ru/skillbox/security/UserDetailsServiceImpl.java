@@ -1,7 +1,5 @@
 package ru.skillbox.security;
 
-import com.example.spring_jwt_auth_example.entity.User;
-import com.example.spring_jwt_auth_example.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
