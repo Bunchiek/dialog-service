@@ -18,8 +18,8 @@
         });
 
         stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
-            'authorId': 1,
-            'recipientId': 2,
+            'authorId': "550e8400-e29b-41d4-a716-446655440000",
+            'recipientId': "550e8400-e29b-41d4-a716-446655440001",
             'messageText': 'Hello!',
             'dialogId': 1,
             'time': 454545

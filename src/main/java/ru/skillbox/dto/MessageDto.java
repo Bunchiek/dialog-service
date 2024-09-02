@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.entity.Status;
+
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -11,14 +14,11 @@ import lombok.NoArgsConstructor;
 @Builder
 public class MessageDto  {
 
-
+    private Long id;
     private Long time;
-    private Long authorId;
-    private Long recipientId;
+    private UUID authorId;
+    private UUID recipientId;
     private String messageText;
-    private Long dialogId;
+    private Status status;
 
-    public MessageDto(String messageText) {
-        this.messageText = messageText;
-    }
 }

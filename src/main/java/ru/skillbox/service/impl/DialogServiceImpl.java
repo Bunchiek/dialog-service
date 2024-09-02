@@ -33,9 +33,7 @@ public class DialogServiceImpl implements DialogService {
 
     @Override
     public SetStatusMessageReadRs setStatusMessageRead(Long companionId) {
-
         SetStatusMessageReadRs response = new SetStatusMessageReadRs();
-
         try {
             Account companion = accountRepository.findById(companionId)
                     .orElseThrow(() -> new NoSuchElementException("Пользователь не найден"));
@@ -151,35 +149,15 @@ public class DialogServiceImpl implements DialogService {
                 .build();
     }
 
+
     private AccountDto convertAccountToDto(Account account) {
         if (account == null) {
             return null;
         }
         return AccountDto.builder()
                 .id(account.getId())
-//                .email(account.getEmail())
-//                .phone(account.getPhone())
-//                .photo(account.getPhoto())
-//                .about(account.getAbout())
-//                .city(account.getCity())
-//                .country(account.getCountry())
-//                .token(account.getToken())
-//                .statusCode(account.getStatusCode())
                 .firstName(account.getFirstName())
                 .lastName(account.getLastName())
-//                .regDate(account.getRegDate())
-//                .birthDate(account.getBirthDate())
-//                .messagePermission(account.getMessagePermission())
-//                .lastOnlineTime(account.getLastOnlineTime())
-//                .isOnline(account.getIsOnline())
-//                .isBlocked(account.getIsBlocked())
-//                .isDeleted(account.getIsDeleted())
-//                .photoId(account.getPhotoId())
-//                .photoName(account.getPhotoName())
-//                .role(account.getRole())
-//                .createdOn(account.getCreatedOn())
-//                .updatedOn(account.getUpdatedOn())
-//                .password(account.getPassword())  // ????
                 .build();
     }
 
@@ -188,12 +166,12 @@ public class DialogServiceImpl implements DialogService {
             return null;
         }
         return MessageDto.builder()
-//                .id(message.getId())
+                .id(message.getId())
                 .time(message.getTime())
                 .authorId(message.getAuthor().getId())
                 .recipientId(message.getRecipient().getId())
                 .messageText(message.getMessageText())
-//                .status(message.getStatus())
+                .status(message.getStatus())
                 .build();
     }
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
+import ru.skillbox.annotation.Loggable;
 import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageDto;
 
@@ -14,9 +15,9 @@ public class MessageBrokerService {
 
     private final MessageConsumerService messageConsumerService;
 
+    @Loggable
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageDto messageDTO) {
-        log.info("Объект из rabbitmq {}",messageDTO);
         messageConsumerService.saveMessage(messageDTO);
     }
 }

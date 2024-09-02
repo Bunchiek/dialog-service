@@ -10,12 +10,12 @@ services:
     networks:
       - kafka-network
 
-  socialnet-frontend:
-    image: aleksandrslu/socialnet-frontend
-    ports:
-      - "8080:80"
-    networks:
-      - kafka-network
+#  socialnet-frontend:
+#    image: aleksandrslu/socialnet-frontend
+#    ports:
+#      - "8080:80"
+#    networks:
+#      - kafka-network
 
 
   zookeeper:

@@ -1,46 +1,25 @@
 package ru.skillbox.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Getter
 @Setter
 @Table(name = "accounts")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-//    @Column(name = "email", unique = true, nullable = false)
-//    private String email;
-
-//    @Column(name = "phone")
-//    private String phone;
-//
-//    @Column(name = "photo")
-//    private String photo;
-//
-//    @Column(name = "about")
-//    private String about;
-//
-//    @Column(name = "city")
-//    private String city;
-//
-//    @Column(name = "country")
-//    private String country;
-//
-//    @Column(name = "token")
-//    private String token;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "status_code", nullable = false)
-//    private StatusCode statusCode;
+    private UUID id;
 
     @Column(name = "first_name")
     private String firstName;
@@ -48,45 +27,12 @@ public class Account {
     @Column(name = "last_name")
     private String lastName;
 
-//    @Column(name = "reg_date")
-//    private LocalDateTime regDate;
-//
-//    @Column(name = "birth_date")
-//    private LocalDateTime birthDate;
-//
-//    @Column(name = "message_permission")
-//    private String messagePermission;
-
-//    @Column(name = "last_online_time")
-//    private LocalDateTime lastOnlineTime;
-//
-//    @Column(name = "is_online")
-//    private Boolean isOnline;
-//
-//    @Column(name = "is_blocked")
-//    private Boolean isBlocked;
-//
-//    @Column(name = "is_deleted")
-//    private Boolean isDeleted;
-//
-//    @Column(name = "photo_id")
-//    private String photoId;
-//
-//    @Column(name = "photo_name")
-//    private String photoName;
-//
-//    @Enumerated(EnumType.STRING)
-//    @Column(name = "role", nullable = false)
-//    private Role role;
-//
-//    @Column(name = "created_on")
-//    private LocalDateTime createdOn;
-//
-//    @Column(name = "updated_on")
-//    private LocalDateTime updatedOn;
-//
-//    @Column(name = "password", nullable = false)
-//    private String password;
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "roles", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Builder.Default
+    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Message> sentMessages;

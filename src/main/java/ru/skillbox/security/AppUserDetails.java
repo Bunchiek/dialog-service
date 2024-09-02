@@ -4,37 +4,35 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import ru.skillbox.entity.Account;
 
 import java.util.Collection;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 public class AppUserDetails implements UserDetails {
 
-    private final User user;
+    private final Account account;
 
 
-    public Long getId() {
-        return user.getId();
-    }
-
-    public String getEmail() {
-        return user.getEmail();
+    public UUID getId() {
+        return account.getId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream()
+        return account.getRoles().stream()
                 .map(r->new SimpleGrantedAuthority(r.name()))
                 .toList();
     }
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return null;
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return account.getId().toString();
     }
 
     @Override

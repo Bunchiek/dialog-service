@@ -2,12 +2,10 @@ server:
   port: 0
 
 spring:
-  profiles:
-    active: dev
   application:
     name: social-network-dialog
   kafka:
-    bootstrap-servers: localhost:9093
+    bootstrap-servers: kafka:9093
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.yml
@@ -15,7 +13,7 @@ spring:
 #    generate-ddl: true
     open-in-view: false
   datasource:
-    url: jdbc:postgresql://localhost:5432/social-network-dialog
+    url: jdbc:postgresql://postgres:5432/social-network-dialog
     username: postgres
     password: postgres
     hikari:
@@ -31,7 +29,7 @@ app:
     kafkaMessageGroupId: "kafka-message-group-id"
 
   rabbitMQ:
-    host: "localhost"
+    host: "rabbitmq"
     port: 61613
     login: "guest"
     password: "guest"
