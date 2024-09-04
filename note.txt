@@ -1,0 +1,2 @@
+rabbitmq-plugins list
+rabbitmq-plugins enable rabbitmq_stomp
