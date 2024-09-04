@@ -35,4 +35,9 @@ app:
     login: "guest"
     password: "guest"
 
+eureka:
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
 #89.111.174.153
