@@ -1,9 +1,8 @@
 server:
-  port: 0
-
+  port: 8082
 spring:
-  profiles:
-    active: dev
+#  profiles:
+#    active: prod
   application:
     name: social-network-dialog
   kafka:
@@ -13,7 +12,7 @@ spring:
     change-log: classpath:db/changelog/db.changelog-master.yml
   jpa:
 #    generate-ddl: true
-    open-in-view: false
+    open-in-view: true
   datasource:
     url: jdbc:postgresql://localhost:5432/social-network-dialog
     username: postgres

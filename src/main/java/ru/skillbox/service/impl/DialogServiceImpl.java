@@ -76,8 +76,10 @@ public class DialogServiceImpl implements DialogService {
                 .offset((int) pageable.getOffset())
                 .perPage(pageable.getPageSize())
                 .data(dialogDtoList)
+                .currentUserId(1L)
                 .build();
     }
+
 
     @Override
     public UnreadCountRs getUnreadMessageCount() {
@@ -148,7 +150,6 @@ public class DialogServiceImpl implements DialogService {
                 .lastMessage(lastMessage != null ? convertMessageToDto(lastMessage) : null)
                 .build();
     }
-
 
     private AccountDto convertAccountToDto(Account account) {
         if (account == null) {

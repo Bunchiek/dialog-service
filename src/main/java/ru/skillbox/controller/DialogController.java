@@ -34,7 +34,7 @@ public class DialogController {
     }
 
 
-    @GetMapping("/unreaded")
+    @GetMapping("/unread")
     public ResponseEntity<UnreadCountRs> getUnreadMessageCount() {
         UnreadCountRs response = dialogService.getUnreadMessageCount();
         return ResponseEntity.ok(response);

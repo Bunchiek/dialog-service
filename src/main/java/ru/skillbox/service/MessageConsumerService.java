@@ -29,14 +29,13 @@ public class MessageConsumerService {
         Account recipient = accountRepository.findById(messageDTO.getRecipientId()).orElseThrow();
         Dialog dialog = dialogRepository.findById(1L).orElseThrow();
 
-        Message message = Message.builder()
-                .time(messageDTO.getTime())
-                .author(author)
-                .recipient(recipient)
-                .messageText(messageDTO.getMessageText())
-                .status(Status.SENT)
-                .dialog(dialog)
-                .build();
+        Message message = new Message();
+        message.setTime(messageDTO.getTime());
+        message.setAuthor(author);
+        message.setRecipient(recipient);
+        message.setMessageText(message.getMessageText());
+        message.setStatus(Status.SENT);
+        message.setDialog(dialog);
         messageRepository.save(message);
 
     }

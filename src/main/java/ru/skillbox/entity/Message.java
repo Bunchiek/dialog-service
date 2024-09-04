@@ -3,14 +3,16 @@ package ru.skillbox.entity;
 import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
 @Entity
 @Getter
 @Setter
-@Builder
+//@Builder
 @Table(name = "messages")
+@NoArgsConstructor
 public class Message {
 
     @Id
