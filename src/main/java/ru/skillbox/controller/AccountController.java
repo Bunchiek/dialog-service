@@ -15,6 +15,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/account/me")
+
+//Класс-заглушка для доступа в фронт
 public class AccountController {
 
 

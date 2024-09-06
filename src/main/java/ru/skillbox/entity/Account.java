@@ -34,13 +34,13 @@ public class Account {
     @Builder.Default
     private Set<Role> roles = new HashSet<>();
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> sentMessages;
 
-    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Message> receivedMessages;
 
-    @OneToMany(mappedBy = "conversationPartner", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "conversationPartner", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Dialog> dialogs;
 
 

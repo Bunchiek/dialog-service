@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import ru.skillbox.annotation.Loggable;
 import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageDto;
+import ru.skillbox.entity.Status;
 
 @Component
 @RequiredArgsConstructor

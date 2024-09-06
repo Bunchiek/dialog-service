@@ -1,7 +1,6 @@
 package ru.skillbox.controller;
 
 
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,8 @@ import ru.skillbox.dto.GetMessagesRs;
 import ru.skillbox.dto.SetStatusMessageReadRs;
 import ru.skillbox.dto.UnreadCountRs;
 import ru.skillbox.service.DialogService;
+
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/dialogs")
@@ -43,7 +44,7 @@ public class DialogController {
 
     @GetMapping("/messages")
     public ResponseEntity<GetMessagesRs> getAllMessages(
-            @RequestParam("companionId") Long companionId,
+            @RequestParam("companionId") UUID companionId,
             @RequestParam(value = "offset", defaultValue = "0", required=false) int offset,
             @RequestParam(value = "itemPerPage", defaultValue = "20",required=false) int itemPerPage) {
         GetMessagesRs response = dialogService.getAllMessages(companionId, PageRequest.of(offset, itemPerPage));

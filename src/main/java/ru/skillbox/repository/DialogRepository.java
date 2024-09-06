@@ -1,5 +1,7 @@
 package ru.skillbox.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -15,7 +17,8 @@ public interface DialogRepository extends JpaRepository<Dialog, Long> {
 
     Optional<Dialog> findByConversationPartner(Account conversationPartner);
 
+    @EntityGraph(attributePaths = {"messages", "conversationPartner"})
+    Page<Dialog> findAll(Pageable pageable);
 
-    @EntityGraph(attributePaths = {"messages"})
-    List<Dialog> findAll();
+
 }

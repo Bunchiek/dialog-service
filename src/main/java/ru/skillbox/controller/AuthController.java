@@ -12,6 +12,8 @@ import ru.skillbox.dto.LoginResponse;
 @RequiredArgsConstructor
 @Slf4j
 @RequestMapping("/api/v1/auth/login")
+
+//Класс-заглушка для доступа в фронт
 public class AuthController {
 
     @CrossOrigin(origins = "http://localhost:8080")

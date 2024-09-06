@@ -12,7 +12,6 @@ import ru.skillbox.entity.Status;
 import ru.skillbox.repository.AccountRepository;
 import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
-import ru.skillbox.utils.MapperFactory;
 
 @Service
 @RequiredArgsConstructor
@@ -33,7 +32,7 @@ public class MessageConsumerService {
         message.setTime(messageDTO.getTime());
         message.setAuthor(author);
         message.setRecipient(recipient);
-        message.setMessageText(message.getMessageText());
+        message.setMessageText(messageDTO.getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
         messageRepository.save(message);

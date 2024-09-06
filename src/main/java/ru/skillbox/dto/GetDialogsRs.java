@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -21,5 +20,6 @@ public class GetDialogsRs {
     private Integer offset;
     private Integer perPage;
     private Long currentUserId;
+//    private List<Long> data;
     private List<DialogDto> data;
 }

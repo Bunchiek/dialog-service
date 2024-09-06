@@ -20,5 +20,5 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
 
 
     @Query("SELECT m FROM Account m WHERE m.id = :id")
-    Optional<Account> findByUUID(@Param("id") String id);
+    Optional<Account> findByUUID(@Param("id") UUID id);
 }

@@ -19,6 +19,7 @@ import ru.skillbox.service.DialogService;
 import java.time.Instant;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,7 +91,7 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Override
-    public GetMessagesRs getAllMessages(Long companionId, Pageable pageable) {
+    public GetMessagesRs getAllMessages(UUID companionId, Pageable pageable) {
         
         GetMessagesRs response = new GetMessagesRs();
 
