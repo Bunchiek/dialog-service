@@ -14,6 +14,8 @@ import ru.skillbox.repository.AccountRepository;
 import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
 import ru.skillbox.service.DialogService;
+import ru.skillbox.utils.impl.MapperDialogToDto;
+import ru.skillbox.utils.impl.MapperMessageToShortDto;
 
 
 import java.time.Instant;
@@ -68,7 +70,7 @@ public class DialogServiceImpl implements DialogService {
 
         Page<Dialog> dialogs = dialogRepository.findAll(pageable);
         List<DialogDto> dialogDtoList = dialogs.getContent().stream()
-                .map(this::convertToDto)
+                .map(MapperDialogToDto::convertToDto)
                 .toList();
 
         return GetDialogsRs.builder()
@@ -105,7 +107,7 @@ public class DialogServiceImpl implements DialogService {
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
 
             List<MessageShortDto> messageDtos = messagesPage.stream()
-                    .map(this::convertMessageToShortDto)
+                    .map(MapperMessageToShortDto::convertMessageToShortDto)
                     .collect(Collectors.toList());
 
             response.setTotal((int) messagesPage.getTotalElements());
@@ -122,59 +124,6 @@ public class DialogServiceImpl implements DialogService {
 
         return response;
 
-    }
-
-    private MessageShortDto  convertMessageToShortDto(Message message) {
-        return MessageShortDto.builder()
-                .id(message.getId())
-                .authorId(message.getAuthor().getId())
-                .time(message.getTime())
-                .messageText(message.getMessageText())
-                .build();
-    }
-
-
-    public DialogDto convertToDto(Dialog dialog) {
-        if (dialog == null) {
-            return null;
-        }
-        Message lastMessage = null;
-        try {
-            lastMessage = dialog.getMessages().getLast();
-        } catch (NoSuchElementException e) {
-            log.info("В диалоге {} нет сообщений ", dialog.getId() + e.getMessage());
-        }
-        return DialogDto.builder()
-                .id(dialog.getId())
-                .unreadCount(dialog.getUnreadCount())
-                .conversationPartner(convertAccountToDto(dialog.getConversationPartner()))
-                .lastMessage(lastMessage != null ? convertMessageToDto(lastMessage) : null)
-                .build();
-    }
-
-    private AccountDto convertAccountToDto(Account account) {
-        if (account == null) {
-            return null;
-        }
-        return AccountDto.builder()
-                .id(account.getId())
-                .firstName(account.getFirstName())
-                .lastName(account.getLastName())
-                .build();
-    }
-
-    private MessageDto convertMessageToDto(Message message) {
-        if (message == null) {
-            return null;
-        }
-        return MessageDto.builder()
-                .id(message.getId())
-                .time(message.getTime())
-                .authorId(message.getAuthor().getId())
-                .recipientId(message.getRecipient().getId())
-                .messageText(message.getMessageText())
-                .status(message.getStatus())
-                .build();
     }
 
 }

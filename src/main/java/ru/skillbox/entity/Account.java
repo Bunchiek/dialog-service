@@ -27,12 +27,12 @@ public class Account {
     @Column(name = "last_name")
     private String lastName;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-    @Column(name = "roles", nullable = false)
-    @Enumerated(EnumType.STRING)
-    @Builder.Default
-    private Set<Role> roles = new HashSet<>();
+//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+//    @Column(name = "roles", nullable = false)
+//    @Enumerated(EnumType.STRING)
+//    @Builder.Default
+//    private Set<Role> roles = new HashSet<>();
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> sentMessages;
