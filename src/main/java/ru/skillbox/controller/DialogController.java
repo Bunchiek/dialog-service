@@ -21,7 +21,7 @@ public class DialogController {
     private final DialogService dialogService;
 
     @PutMapping("/{companionId}")
-    public ResponseEntity<SetStatusMessageReadRs> setStatusMessageRead(@PathVariable Long companionId) {
+    public ResponseEntity<SetStatusMessageReadRs> setStatusMessageRead(@PathVariable UUID companionId) {
         SetStatusMessageReadRs response = dialogService.setStatusMessageRead(companionId);
         return ResponseEntity.ok(response);
     }

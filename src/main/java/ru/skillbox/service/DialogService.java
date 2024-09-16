@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface DialogService {
 
-    public SetStatusMessageReadRs setStatusMessageRead(Long companionId);
+    public SetStatusMessageReadRs setStatusMessageRead(UUID companionId);
 
     public GetDialogsRs getAllDialogs(Pageable pageable);
 

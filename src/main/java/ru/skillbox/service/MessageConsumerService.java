@@ -13,6 +13,10 @@ import ru.skillbox.repository.AccountRepository;
 import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Stream;
+
 @Service
 @RequiredArgsConstructor
 public class MessageConsumerService {
@@ -24,9 +28,14 @@ public class MessageConsumerService {
     @Transactional
     @Loggable
     public void saveMessage(MessageDto messageDTO) {
-        Account author = accountRepository.findById(messageDTO.getAuthorId()).orElseThrow();
-        Account recipient = accountRepository.findById(messageDTO.getRecipientId()).orElseThrow();
-        Dialog dialog = dialogRepository.findById(1L).orElseThrow();
+
+        Account author = accountRepository.findById(messageDTO.getAuthorId())
+                .orElseThrow(() -> new NoSuchElementException("Отправитель не найден"));
+
+        Account recipient = accountRepository.findById(messageDTO.getRecipientId())
+                .orElseThrow(() -> new NoSuchElementException("Получатель не найден"));
+
+        Dialog dialog = findDialogForConversation(author, recipient);
 
         Message message = new Message();
         message.setTime(messageDTO.getTime());
@@ -35,7 +44,15 @@ public class MessageConsumerService {
         message.setMessageText(messageDTO.getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
-        messageRepository.save(message);
 
+        messageRepository.save(message);
+    }
+
+
+    private Dialog findDialogForConversation(Account author, Account recipient) {
+        return author.getDialogs().stream()
+                .filter(d -> d.getConversationPartner().equals(recipient))
+                .findFirst()
+                .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
     }
 }

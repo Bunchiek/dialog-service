@@ -23,9 +23,8 @@ import java.io.IOException;
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
-    private final JwtUtils jwtUtils;
-
     private final UserDetailsServiceImpl userDetailsService;
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -33,8 +32,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             String jwtToken = getToken(request);
 
-            if (jwtToken != null && jwtUtils.validate(jwtToken)) {
-                String username = jwtUtils.getUsername(jwtToken);
+            if (jwtToken != null && JwtUtils.validateToken(jwtToken)) {
+                String username = JwtUtils.getUsername(jwtToken);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
                 UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userDetails, null,

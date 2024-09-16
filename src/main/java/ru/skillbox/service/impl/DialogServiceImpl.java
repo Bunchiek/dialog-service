@@ -1,5 +1,7 @@
 package ru.skillbox.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -14,13 +16,14 @@ import ru.skillbox.repository.AccountRepository;
 import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
 import ru.skillbox.service.DialogService;
+import ru.skillbox.utils.GetCurrentUsername;
 import ru.skillbox.utils.impl.MapperDialogToDto;
 import ru.skillbox.utils.impl.MapperMessageToShortDto;
 
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -35,14 +38,15 @@ public class DialogServiceImpl implements DialogService {
 
 
     @Override
-    public SetStatusMessageReadRs setStatusMessageRead(Long companionId) {
+    @Transactional
+    public SetStatusMessageReadRs setStatusMessageRead(UUID companionId) {
         SetStatusMessageReadRs response = new SetStatusMessageReadRs();
         try {
             Account companion = accountRepository.findById(companionId)
-                    .orElseThrow(() -> new NoSuchElementException("Пользователь не найден"));
+                    .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
 
             Dialog dialog = dialogRepository.findByConversationPartner(companion)
-                    .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
+                    .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             dialog.getMessages().stream()
                     .filter(message -> message.getStatus() == Status.SENT)
@@ -55,7 +59,7 @@ public class DialogServiceImpl implements DialogService {
 
             response.setData(SetStatusMessageReadDto.builder().message("OK").build());
 
-        } catch (NoSuchElementException e) {
+        } catch (EntityNotFoundException e) {
             response.setData(SetStatusMessageReadDto.builder().message("NOK").build());
             response.setError("Ошибка");
             response.setErrorDescription(e.getMessage());
@@ -70,7 +74,7 @@ public class DialogServiceImpl implements DialogService {
 
         Page<Dialog> dialogs = dialogRepository.findAll(pageable);
         List<DialogDto> dialogDtoList = dialogs.getContent().stream()
-                .map(MapperDialogToDto::convertToDto)
+                .map(MapperDialogToDto::convertDialogToDto)
                 .toList();
 
         return GetDialogsRs.builder()
@@ -79,34 +83,35 @@ public class DialogServiceImpl implements DialogService {
                 .offset((int) pageable.getOffset())
                 .perPage(pageable.getPageSize())
                 .data(dialogDtoList)
-                .currentUserId(1L)
+                .currentUserId(UUID.fromString(GetCurrentUsername.getCurrentUsername()))
                 .build();
     }
 
 
     @Override
     public UnreadCountRs getUnreadMessageCount() {
+        long unreadCount = messageRepository.countUnreadMessages(Status.SENT);
         return UnreadCountRs.builder()
                 .timestamp(Instant.now().toEpochMilli())
-                .data(UnreadCountDto.builder().count(messageRepository.countUnreadMessages(Status.SENT)).build())
+                .data(UnreadCountDto.builder().count(unreadCount).build())
                 .build();
     }
 
     @Override
     public GetMessagesRs getAllMessages(UUID companionId, Pageable pageable) {
-        
         GetMessagesRs response = new GetMessagesRs();
+        response.setData(new ArrayList<>());
 
         try {
             Account companion = accountRepository.findById(companionId)
-                    .orElseThrow(() -> new NoSuchElementException("Пользователь не найден"));
+                    .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
 
             Dialog dialog = dialogRepository.findByConversationPartner(companion)
-                    .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
+                    .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
 
-            List<MessageShortDto> messageDtos = messagesPage.stream()
+            List<MessageShortDto> messageDtos = messagesPage.getContent().stream()
                     .map(MapperMessageToShortDto::convertMessageToShortDto)
                     .collect(Collectors.toList());
 
@@ -116,14 +121,13 @@ public class DialogServiceImpl implements DialogService {
             response.setData(messageDtos);
             response.setTimestamp(Instant.now().toEpochMilli());
 
-        } catch (NoSuchElementException e) {
+        } catch (EntityNotFoundException e) {
             response.setError("Ошибка");
             response.setErrorDescription(e.getMessage());
             response.setTimestamp(Instant.now().toEpochMilli());
         }
 
         return response;
-
     }
 
 }

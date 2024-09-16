@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class GetDialogsRs {
     private Integer total;
     private Integer offset;
     private Integer perPage;
-    private Long currentUserId;
+    private UUID currentUserId;
 //    private List<Long> data;
     private List<DialogDto> data;
 }

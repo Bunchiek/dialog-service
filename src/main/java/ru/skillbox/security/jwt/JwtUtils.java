@@ -2,45 +2,54 @@ package ru.skillbox.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.IOException;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.URI;
+import java.net.http.HttpResponse;
+import java.util.Base64;
 
 
 @Component
 @Slf4j
 public class JwtUtils {
 
-    @Value("${app.jwt.secret}")
-    private String jwtSecret;
+    @Value("${app.jwt.uriValidate}")
+    private static String uriValidate;
 
 
-    public String getUsername(String token) {
-        SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-        return Jwts.parser().verifyWith(secret).build().parseSignedClaims(token).getBody().getSubject();
 
-    }
 
-    public boolean validate(String authToken) {
-        try {
-            SecretKey secret = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret));
-            Jwts.parser().verifyWith(secret).build().parseSignedClaims(authToken);
+
+    public static Boolean validateToken(String jwt) throws IOException, InterruptedException, java.io.IOException {
+        HttpClient client = HttpClient.newHttpClient();
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(uriValidate))
+                .header("Authorization", "Bearer " + jwt)
+                .POST(HttpRequest.BodyPublishers.noBody())
+                .build();
+
+        HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        if (response.statusCode() == 200) {
             return true;
-        } catch (SecurityException e) {
-            log.error("Invalid signature: {}", e.getMessage());
-        } catch (MalformedJwtException e) {
-            log.error("Invalid token: {}", e.getMessage());
-        } catch (ExpiredJwtException e) {
-            log.error("Token is expired: {}", e.getMessage());
-        } catch (UnsupportedJwtException e ) {
-            log.error("Token is unsupported: {}", e.getMessage());
-        } catch (IllegalArgumentException e) {
-            log.error("Claims string is empty: {}", e.getMessage());
+        } else {
+            throw new RuntimeException("Failed to validate token: " + response.statusCode());
         }
-        return false;
     }
 
+    public static String getUsername(String jwtToken) {
+        String[] jwtParts = jwtToken.split("\\.");
+        String payload = jwtParts[1];
+
+        byte[] decodedBytes = Base64.getDecoder().decode(payload);
+        return new String(decodedBytes);
+    }
 }

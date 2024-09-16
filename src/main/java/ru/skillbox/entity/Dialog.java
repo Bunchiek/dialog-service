@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,6 +27,6 @@ public class Dialog {
     private Account conversationPartner;
 
     @OneToMany(mappedBy = "dialog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<Message> messages;
+    private List<Message> messages = new ArrayList<>();
 
 }
