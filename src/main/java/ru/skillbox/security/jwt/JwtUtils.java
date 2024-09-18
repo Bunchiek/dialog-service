@@ -45,10 +45,5 @@ public class JwtUtils {
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-//        String[] jwtParts = jwtToken.split("\\.");
-//        String payload = jwtParts[1];
-//
-//        byte[] decodedBytes = Base64.getDecoder().decode(payload);
-//        return new String(decodedBytes);
     }
 }
