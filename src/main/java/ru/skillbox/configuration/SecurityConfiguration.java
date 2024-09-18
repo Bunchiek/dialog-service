@@ -20,7 +20,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
-import ru.skillbox.security.UserDetailsServiceImpl;
 import ru.skillbox.security.jwt.JwtAuthenticationEntryPoint;
 import ru.skillbox.security.jwt.JwtTokenFilter;
 
