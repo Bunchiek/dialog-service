@@ -10,13 +10,8 @@ import org.springframework.web.socket.config.annotation.*;
 
 @Configuration
 @EnableWebSocketMessageBroker
-//@EnableWebSocket
 @RequiredArgsConstructor
 public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer{
-    //implements WebSocketMessageBrokerConfigurer
-    //implements WebSocketConfigurer
-
-//    private final WebSocketHandler webSocketHandler;
 
     @Value("${app.rabbitMQ.host}")
     private String rabbitMqHost;
@@ -33,10 +28,10 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer{
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableStompBrokerRelay("/topic")
-                .setRelayHost(rabbitMqHost)
-                .setRelayPort(rabbitMqPort) // Порт STOMP
-                .setClientLogin(rabbitMqLogin)
-                .setClientPasscode(rabbitMqPassword);
+                .setRelayHost("rabbitmq")
+                .setRelayPort(61613) // Порт STOMP
+                .setClientLogin("guest")
+                .setClientPasscode("guest");
         config.setApplicationDestinationPrefixes("/app");
     }
 
@@ -46,12 +41,6 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer{
                 .setAllowedOrigins("http://89.111.174.153:8080");
     }
 
-
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        registry.addHandler(webSocketHandler, "/api/v1/streaming/ws")
-//                .setAllowedOrigins("http://localhost:8080");
-//    }
 }
 
 

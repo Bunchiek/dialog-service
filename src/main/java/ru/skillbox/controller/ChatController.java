@@ -19,9 +19,8 @@ public class ChatController {
 
     @Loggable
     @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/public")
-    public MessageDto sendMessage(MessageDto messageDTO) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.QUEUE_NAME, messageDTO);
-        return messageDTO;
+    public void sendMessage(MessageDto messageDTO) {
+        // Отправка сообщения в RabbitMQ (Topic Exchange)
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageDTO);
     }
 }

@@ -20,10 +20,6 @@ public class JwtUtils {
     @Value("${app.jwt.uriValidate}")
     private static String uriValidate;
 
-
-
-
-
     public static Boolean validateToken(String jwt) throws IOException, InterruptedException, java.io.IOException {
 
         HttpClient client = HttpClient.newHttpClient();
