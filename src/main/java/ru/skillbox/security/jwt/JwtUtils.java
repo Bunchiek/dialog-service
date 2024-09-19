@@ -18,14 +18,17 @@ import java.text.ParseException;
 public class JwtUtils {
 
     @Value("${app.jwt.uriValidate}")
-    private static String uriValidate;
+    private String uriValidate;
+
+    @Value("${app.rabbitMQ.host}")
+    private String rabbitMqHost;
 
     public static Boolean validateToken(String jwt) throws IOException, InterruptedException, java.io.IOException {
 
         HttpClient client = HttpClient.newHttpClient();
 
         HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(uriValidate))
+                .uri(URI.create("http://89.111.174.153:9090/api/v1/auth/tokenValidation"))
                 .header("Authorization", "Bearer " + jwt)
                 .POST(HttpRequest.BodyPublishers.noBody())
                 .build();

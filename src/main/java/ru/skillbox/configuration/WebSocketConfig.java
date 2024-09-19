@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 
 
@@ -28,10 +27,10 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer{
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         config.enableStompBrokerRelay("/topic")
-                .setRelayHost("rabbitmq")
-                .setRelayPort(61613) // Порт STOMP
-                .setClientLogin("guest")
-                .setClientPasscode("guest");
+                .setRelayHost(rabbitMqHost)
+                .setRelayPort(rabbitMqPort) // Порт STOMP
+                .setClientLogin(rabbitMqLogin)
+                .setClientPasscode(rabbitMqPassword);
         config.setApplicationDestinationPrefixes("/app");
     }
 

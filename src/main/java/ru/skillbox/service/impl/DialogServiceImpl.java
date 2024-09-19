@@ -76,6 +76,12 @@ public class DialogServiceImpl implements DialogService {
         List<DialogDto> dialogDtoList = dialogs.getContent().stream()
                 .map(MapperDialogToDto::convertDialogToDto)
                 .toList();
+        UUID uuid;
+        if (GetCurrentUsername.getCurrentUsername().equals("anonymousUser")) {
+            uuid = UUID.randomUUID();
+        } else {
+            uuid = UUID.fromString(GetCurrentUsername.getCurrentUsername());
+        }
 
         return GetDialogsRs.builder()
                 .timestamp(Instant.now().toEpochMilli())
@@ -83,7 +89,7 @@ public class DialogServiceImpl implements DialogService {
                 .offset((int) pageable.getOffset())
                 .perPage(pageable.getPageSize())
                 .data(dialogDtoList)
-                .currentUserId(UUID.fromString(GetCurrentUsername.getCurrentUsername()))
+                .currentUserId(uuid)
                 .build();
     }
 
