@@ -20,6 +20,13 @@ public class DialogController {
 
     private final DialogService dialogService;
 
+
+    @GetMapping("/recipientId/{recipientId}")
+    public ResponseEntity<SetStatusMessageReadRs> getDialog(@PathVariable UUID recipientId) {
+        SetStatusMessageReadRs response = dialogService.setStatusMessageRead(recipientId);
+        return ResponseEntity.ok(response);
+    }
+
     @PutMapping("/{companionId}")
     public ResponseEntity<SetStatusMessageReadRs> setStatusMessageRead(@PathVariable UUID companionId) {
         SetStatusMessageReadRs response = dialogService.setStatusMessageRead(companionId);
@@ -44,10 +51,10 @@ public class DialogController {
 
     @GetMapping("/messages")
     public ResponseEntity<GetMessagesRs> getAllMessages(
-            @RequestParam("companionId") UUID companionId,
+            @RequestParam("recipientId") UUID recipientId,
             @RequestParam(value = "offset", defaultValue = "0", required=false) int offset,
             @RequestParam(value = "itemPerPage", defaultValue = "20",required=false) int itemPerPage) {
-        GetMessagesRs response = dialogService.getAllMessages(companionId, PageRequest.of(offset, itemPerPage));
+        GetMessagesRs response = dialogService.getAllMessages(recipientId, PageRequest.of(offset, itemPerPage));
         return ResponseEntity.ok(response);
     }
 

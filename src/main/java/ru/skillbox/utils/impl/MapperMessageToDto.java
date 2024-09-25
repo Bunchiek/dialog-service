@@ -13,7 +13,6 @@ public class MapperMessageToDto {
         }
 
         return MessageDto.builder()
-                .id(message.getId())
                 .time(message.getTime())
                 .authorId(message.getAuthor() != null ? message.getAuthor().getId() : null)
                 .recipientId(message.getRecipient() != null ? message.getRecipient().getId() : null)

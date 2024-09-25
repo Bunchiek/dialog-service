@@ -7,7 +7,7 @@
 </head>
 <body>
 <script>
-    let socket = new SockJS('http://localhost:8082/api/v1/streaming/ws');
+    let socket = new SockJS('http://localhost:8787/api/v1/streaming/ws');
     let stompClient = Stomp.over(socket);
 
     stompClient.connect({}, function (frame) {

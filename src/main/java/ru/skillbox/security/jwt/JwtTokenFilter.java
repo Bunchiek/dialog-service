@@ -9,19 +9,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 @RequiredArgsConstructor
 @Slf4j
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
 
+    private final JwtUtils jwtUtils;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -29,10 +30,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         try {
             String jwtToken = getToken(request);
 
-            if (jwtToken != null && JwtUtils.validateToken(jwtToken)) {
+            if (jwtToken != null && jwtUtils.validateToken(jwtToken)) {
                 String username = JwtUtils.getUsername(jwtToken);
 
-                UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(User.builder().username(username).build(), null);
+                UsernamePasswordAuthenticationToken authenticationToken =
+                        new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
 
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 

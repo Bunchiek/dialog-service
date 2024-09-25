@@ -8,18 +8,13 @@ CREATE TABLE accounts (
     last_name VARCHAR(255) NOT NULL
 );
 
-CREATE TABLE user_roles (
-    user_id UUID NOT NULL,
-    roles VARCHAR(255) NOT NULL,
-    CONSTRAINT fk_user_roles_accounts FOREIGN KEY (user_id) REFERENCES accounts(id) ON DELETE CASCADE,
-    CONSTRAINT pk_user_roles PRIMARY KEY (user_id, roles)
-);
-
 CREATE TABLE dialogs (
     id BIGSERIAL PRIMARY KEY,
     unread_count BIGINT NOT NULL,
-    conversation_partner_id UUID NOT NULL,
-    CONSTRAINT fk_dialog_conversation_partner FOREIGN KEY (conversation_partner_id) REFERENCES accounts(id) ON DELETE CASCADE
+    participant_one_id UUID NOT NULL,
+    participant_two_id UUID NOT NULL,
+    FOREIGN KEY (participant_one_id) REFERENCES accounts(id) ON DELETE CASCADE,
+    FOREIGN KEY (participant_two_id) REFERENCES accounts(id) ON DELETE CASCADE
 );
 
 CREATE TABLE messages (

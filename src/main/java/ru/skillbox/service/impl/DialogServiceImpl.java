@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,9 +23,7 @@ import ru.skillbox.utils.impl.MapperMessageToShortDto;
 
 
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,10 +41,8 @@ public class DialogServiceImpl implements DialogService {
     public SetStatusMessageReadRs setStatusMessageRead(UUID companionId) {
         SetStatusMessageReadRs response = new SetStatusMessageReadRs();
         try {
-            Account companion = accountRepository.findById(companionId)
-                    .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
-
-            Dialog dialog = dialogRepository.findByConversationPartner(companion)
+            Dialog dialog = dialogRepository
+                    .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             dialog.getMessages().stream()
@@ -72,24 +69,27 @@ public class DialogServiceImpl implements DialogService {
     @Override
     public GetDialogsRs getAllDialogs(Pageable pageable) {
 
-        Page<Dialog> dialogs = dialogRepository.findAll(pageable);
-        List<DialogDto> dialogDtoList = dialogs.getContent().stream()
-                .map(MapperDialogToDto::convertDialogToDto)
-                .toList();
-        UUID uuid;
-        if (GetCurrentUsername.getCurrentUsername().equals("anonymousUser")) {
-            uuid = UUID.randomUUID();
-        } else {
-            uuid = UUID.fromString(GetCurrentUsername.getCurrentUsername());
+        List<DialogDto> dialogDtoList = new ArrayList<>();
+        Account currentUser = null;
+        try {
+            currentUser = findById(UUID.fromString(GetCurrentUsername.getCurrentUsername()))
+                    .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
+
+            Set<Dialog> dialogs = currentUser.getAllDialogs();
+            dialogDtoList = dialogs.stream()
+                    .map(MapperDialogToDto::convertDialogToDto)
+                    .toList();
+        } catch (EntityNotFoundException e) {
+            log.info(e.getMessage());
         }
 
         return GetDialogsRs.builder()
                 .timestamp(Instant.now().toEpochMilli())
-                .total((int) dialogs.getTotalElements())
+                .total(dialogDtoList.size())
                 .offset((int) pageable.getOffset())
                 .perPage(pageable.getPageSize())
-                .data(dialogDtoList)
-                .currentUserId(uuid)
+                .content(dialogDtoList)
+                .currentUserId(currentUser.getId())
                 .build();
     }
 
@@ -112,14 +112,14 @@ public class DialogServiceImpl implements DialogService {
             Account companion = accountRepository.findById(companionId)
                     .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
 
-            Dialog dialog = dialogRepository.findByConversationPartner(companion)
-                    .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
+            Dialog dialog = dialogRepository
+                    .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
+                    .orElseGet(() -> createDialog(companion));
 
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
-
             List<MessageShortDto> messageDtos = messagesPage.getContent().stream()
                     .map(MapperMessageToShortDto::convertMessageToShortDto)
-                    .collect(Collectors.toList());
+                    .toList();
 
             response.setTotal((int) messagesPage.getTotalElements());
             response.setOffset((int) pageable.getOffset());
@@ -132,8 +132,23 @@ public class DialogServiceImpl implements DialogService {
             response.setErrorDescription(e.getMessage());
             response.setTimestamp(Instant.now().toEpochMilli());
         }
-
         return response;
+    }
+
+    @Transactional
+    public Optional<Account> findById(UUID id) {
+        return accountRepository.findByIdWithDialogsAndMessages(id);
+    }
+
+    @Transactional
+    private Dialog createDialog(Account companion) {
+        Account participantOne = accountRepository.findById(UUID.fromString(GetCurrentUsername.getCurrentUsername()))
+                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
+        Dialog dialog = new Dialog();
+        dialog.setParticipantOne(participantOne);
+        dialog.setParticipantTwo(companion);
+        dialog.setUnreadCount(0L);
+        return dialogRepository.save(dialog); // Сохранение нового диалога
     }
 
 }

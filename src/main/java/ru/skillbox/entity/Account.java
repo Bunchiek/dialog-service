@@ -2,11 +2,9 @@ package ru.skillbox.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Getter
@@ -18,7 +16,6 @@ import java.util.UUID;
 public class Account {
 
     @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID id;
 
     @Column(name = "first_name")
@@ -27,21 +24,34 @@ public class Account {
     @Column(name = "last_name")
     private String lastName;
 
-//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-//    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
-//    @Column(name = "roles", nullable = false)
-//    @Enumerated(EnumType.STRING)
-//    @Builder.Default
-//    private Set<Role> roles = new HashSet<>();
-
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Message> sentMessages;
 
     @OneToMany(mappedBy = "recipient", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Message> receivedMessages;
 
-    @OneToMany(mappedBy = "conversationPartner", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
-    private List<Dialog> dialogs;
+    @OneToMany(mappedBy = "participantOne", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Dialog> dialogsAsParticipantOne = new HashSet<>();
 
+    @OneToMany(mappedBy = "participantTwo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private Set<Dialog> dialogsAsParticipantTwo = new HashSet<>();
 
+    public Set<Dialog> getAllDialogs() {
+        Set<Dialog> allDialogs = new HashSet<>(dialogsAsParticipantOne);
+        allDialogs.addAll(dialogsAsParticipantTwo);
+        return allDialogs;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return Objects.equals(id, account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(id);
+    }
 }

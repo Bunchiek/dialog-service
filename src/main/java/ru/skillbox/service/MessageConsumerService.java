@@ -48,11 +48,8 @@ public class MessageConsumerService {
         messageRepository.save(message);
     }
 
-
     private Dialog findDialogForConversation(Account author, Account recipient) {
-        return author.getDialogs().stream()
-                .filter(d -> d.getConversationPartner().equals(recipient))
-                .findFirst()
+        return dialogRepository.findByParticipants(author.getId(), recipient.getId())
                 .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
     }
 }

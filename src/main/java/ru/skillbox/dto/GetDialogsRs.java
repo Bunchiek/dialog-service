@@ -21,6 +21,5 @@ public class GetDialogsRs {
     private Integer offset;
     private Integer perPage;
     private UUID currentUserId;
-//    private List<Long> data;
-    private List<DialogDto> data;
+    private List<DialogDto> content;
 }
