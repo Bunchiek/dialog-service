@@ -12,17 +12,14 @@ public class MapperMessageToDto {
         if (message == null) {
             return null;
         }
-        MessageRs messageRs = MessageRs.builder()
-                .messageText(message.getMessageText())
-                .time(message.getTime())
-                .readStatus(message.getStatus())
-                .conversationPartner1(message.getAuthor() != null ? message.getAuthor() : null)
-                .conversationPartner2(message.getRecipient() != null ? message.getRecipient() : null)
-                .build();
 
         return MessageDto.builder()
-                .data(messageRs)
-                .recipientId(message.getRecipient() != null ? message.getRecipient() : null)
+                .id(message.getId())
+                .messageText(message.getMessageText())
+                .time(message.getTime())
+                .conversationPartner1(message.getAuthor())
+                .conversationPartner2(message.getRecipient())
+                .readStatus(message.getStatus())
                 .build();
     }
 }

@@ -17,6 +17,6 @@ public class GetMessagesRs {
     private Integer total;
     private Integer offset;
     private Integer perPage;
-    private List<MessageShortDto> data;
+    private List<MessageDto> content;
 
 }

@@ -16,7 +16,9 @@ import ru.skillbox.repository.MessageRepository;
 import ru.skillbox.service.DialogService;
 import ru.skillbox.utils.GetCurrentUsername;
 import ru.skillbox.utils.impl.MapperDialogToDto;
+import ru.skillbox.utils.impl.MapperMessageToDto;
 import ru.skillbox.utils.impl.MapperMessageToShortDto;
+import ru.skillbox.utils.impl.MapperMessageToTempDTO;
 
 
 import java.time.Instant;
@@ -105,14 +107,14 @@ public class DialogServiceImpl implements DialogService {
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
-            List<MessageShortDto> messageDtos = messagesPage.getContent().stream()
-                    .map(MapperMessageToShortDto::convertMessageToShortDto)
+            List<MessageDto> messageDtos = messagesPage.getContent().stream()
+                    .map(MapperMessageToDto::convertMessageToDto)
                     .toList();
 
             response.setTotal((int) messagesPage.getTotalElements());
             response.setOffset((int) pageable.getOffset());
             response.setPerPage(pageable.getPageSize());
-            response.setData(messageDtos);
+            response.setContent(messageDtos);
             response.setTimestamp(Instant.now().toEpochMilli());
 
         } catch (EntityNotFoundException e) {

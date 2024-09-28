@@ -25,15 +25,15 @@ public class MessageConsumerService {
     @Loggable
     public void saveMessage(MessageDto messageDTO) {
 
-        UUID author = messageDTO.getData().getConversationPartner1();
-        UUID recipient = messageDTO.getRecipientId();
+        UUID author = messageDTO.getConversationPartner1();
+        UUID recipient = messageDTO.getConversationPartner2();
         Dialog dialog = findDialogForConversation(author, recipient);
 
         Message message = new Message();
-        message.setTime(messageDTO.getData().getTime());
+        message.setTime(messageDTO.getTime());
         message.setAuthor(author);
         message.setRecipient(recipient);
-        message.setMessageText(messageDTO.getData().getMessageText());
+        message.setMessageText(message.getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
 
