@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import ru.skillbox.dto.DialogDto;
-import ru.skillbox.entity.Account;
+//import ru.skillbox.entity.Account;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
-import ru.skillbox.repository.AccountRepository;
+//import ru.skillbox.repository.AccountRepository;
 
 import java.util.*;
 
@@ -29,8 +29,8 @@ public class MapperDialogToDto {
                 .id(dialog.getId())
                 .lastMessage(lastMessage != null ? MapperMessageToDto.convertMessageToDto(lastMessage) : null)
                 .unreadCount(dialog.getUnreadCount())
-                .conversationPartner1(dialog.getParticipantOne().getId())
-                .conversationPartner2(dialog.getParticipantTwo().getId())
+                .conversationPartner1(dialog.getParticipantOne())
+                .conversationPartner2(dialog.getParticipantTwo())
                 .build();
     }
 }

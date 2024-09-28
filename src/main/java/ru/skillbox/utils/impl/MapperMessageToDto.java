@@ -16,13 +16,13 @@ public class MapperMessageToDto {
                 .messageText(message.getMessageText())
                 .time(message.getTime())
                 .readStatus(message.getStatus())
-                .conversationPartner1(message.getAuthor() != null ? message.getAuthor().getId() : null)
-                .conversationPartner2(message.getRecipient() != null ? message.getRecipient().getId() : null)
+                .conversationPartner1(message.getAuthor() != null ? message.getAuthor() : null)
+                .conversationPartner2(message.getRecipient() != null ? message.getRecipient() : null)
                 .build();
 
         return MessageDto.builder()
                 .data(messageRs)
-                .recipientId(message.getRecipient() != null ? message.getRecipient().getId() : null)
+                .recipientId(message.getRecipient() != null ? message.getRecipient() : null)
                 .build();
     }
 }

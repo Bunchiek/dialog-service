@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Getter
@@ -25,13 +22,20 @@ public class Dialog {
     @Column(name = "unread_count", nullable = false)
     private Long unreadCount;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_one_id", nullable = false)
-    private Account participantOne;
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "participant_one_id", nullable = false)
+//    private Account participantOne;
+//
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "participant_two_id", nullable = false)
+//    private Account participantTwo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "participant_two_id", nullable = false)
-    private Account participantTwo;
+    @Column(name = "participant_one_id", nullable = false)
+    private UUID participantOne;
+    @Column(name = "participant_two_id", nullable = false)
+    private UUID participantTwo;
+
+
 
     @OneToMany(mappedBy = "dialog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private Set<Message> messages = new HashSet<>();

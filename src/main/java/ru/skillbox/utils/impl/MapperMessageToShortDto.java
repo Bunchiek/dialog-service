@@ -2,8 +2,9 @@ package ru.skillbox.utils.impl;
 
 import lombok.experimental.UtilityClass;
 import ru.skillbox.dto.MessageShortDto;
-import ru.skillbox.entity.Account;
 import ru.skillbox.entity.Message;
+
+import java.util.UUID;
 
 @UtilityClass
 public class MapperMessageToShortDto {
@@ -13,7 +14,7 @@ public class MapperMessageToShortDto {
         if (message == null) {
             return null;
         }
-        Account author = message.getAuthor();
+        UUID author = message.getAuthor();
         if (author == null) {
             return MessageShortDto.builder()
                     .authorId(null)
@@ -21,7 +22,7 @@ public class MapperMessageToShortDto {
                     .build();
         }
         return MessageShortDto.builder()
-                .authorId(author.getId())
+                .authorId(author)
                 .messageText(message.getMessageText())
                 .build();
     }
