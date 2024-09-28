@@ -53,4 +53,5 @@ eureka:
     service-url:
       defaultZone: http://89.111.174.153:8761/eureka/
 
+
 #89.111.174.153
