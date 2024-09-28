@@ -29,7 +29,7 @@ public class MessageConsumerService {
     @Loggable
     public void saveMessage(MessageDto messageDTO) {
 
-        Account author = accountRepository.findById(messageDTO.getAuthorId())
+        Account author = accountRepository.findById(messageDTO.getData().getConversationPartner1())
                 .orElseThrow(() -> new NoSuchElementException("Отправитель не найден"));
 
         Account recipient = accountRepository.findById(messageDTO.getRecipientId())
@@ -38,10 +38,10 @@ public class MessageConsumerService {
         Dialog dialog = findDialogForConversation(author, recipient);
 
         Message message = new Message();
-        message.setTime(messageDTO.getTime());
+        message.setTime(messageDTO.getData().getTime());
         message.setAuthor(author);
         message.setRecipient(recipient);
-        message.setMessageText(messageDTO.getMessageText());
+        message.setMessageText(messageDTO.getData().getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
 

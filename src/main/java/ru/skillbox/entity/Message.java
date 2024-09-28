@@ -3,6 +3,8 @@ package ru.skillbox.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 
 @Entity
 @Getter
@@ -17,7 +19,7 @@ public class Message {
     private Long id;
 
     @Column(name = "time", nullable = false)
-    private Long time;
+    private LocalDateTime time;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "author_id", nullable = false)

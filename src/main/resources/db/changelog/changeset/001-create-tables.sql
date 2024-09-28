@@ -19,7 +19,7 @@ CREATE TABLE dialogs (
 
 CREATE TABLE messages (
     id BIGSERIAL PRIMARY KEY,
-    time BIGINT NOT NULL CHECK (time > 0),
+    time TIMESTAMP NOT NULL,
     author_id UUID NOT NULL,
     recipient_id UUID NOT NULL,
     message_text TEXT NOT NULL,
@@ -29,5 +29,4 @@ CREATE TABLE messages (
     CONSTRAINT fk_message_recipient FOREIGN KEY (recipient_id) REFERENCES accounts(id) ON DELETE SET NULL,
     CONSTRAINT fk_message_dialog FOREIGN KEY (dialog_id) REFERENCES dialogs(id) ON DELETE CASCADE,
     CONSTRAINT chk_status CHECK (status IN ('SENT', 'DELIVERED', 'READ'))
-
 );

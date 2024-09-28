@@ -1,5 +1,5 @@
 server:
-  port: 8787
+  port: 0
 
 spring:
   cloud:
@@ -42,7 +42,7 @@ app:
     kafkaMessageGroupId: "kafka-message-group-id"
 
   rabbitMQ:
-    host: "89.111.174.153"
+    host: "rabbitmq"
     port: 61613
     login: "guest"
     password: "guest"

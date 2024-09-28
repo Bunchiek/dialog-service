@@ -19,7 +19,12 @@ public class ChatController {
     @Loggable
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(MessageDto messageDTO) {
-        // Отправка сообщения в RabbitMQ (Topic Exchange)
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageDTO);
+        log.info("Received message: {}", messageDTO);
+        try {
+            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageDTO);
+            log.info("Message successfully sent to RabbitMQ");
+        } catch (Exception e) {
+            log.error("Error sending message to RabbitMQ", e);
+        }
     }
 }
