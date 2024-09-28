@@ -42,9 +42,8 @@ public class MessageConsumerService {
 
         Message message = new Message();
         message.setTime(messageDTO.getData().getTime());
-        message.setAuthor(messageDTO.getData()
-                .getConversationPartner1());
-        message.setRecipient(message.getRecipient());
+        message.setAuthor(author);
+        message.setRecipient(recipient);
         message.setMessageText(messageDTO.getData().getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
