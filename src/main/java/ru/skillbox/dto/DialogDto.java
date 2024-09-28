@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -16,6 +17,6 @@ public class DialogDto {
     private Long id;
     private Long unreadCount;
     private UUID conversationPartner1;
-    private UUID  conversationPartner2;
-    private MessageDto lastMessage;
+    private UUID conversationPartner2;
+    private List<MessageTestDto> lastMessage;
 }
