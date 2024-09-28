@@ -21,14 +21,12 @@ import ru.skillbox.utils.impl.MapperMessageToShortDto;
 
 import java.time.Instant;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class DialogServiceImpl implements DialogService {
 
-//    private final AccountRepository accountRepository;
     private final DialogRepository dialogRepository;
     private final MessageRepository messageRepository;
 
@@ -102,9 +100,6 @@ public class DialogServiceImpl implements DialogService {
         GetMessagesRs response = new GetMessagesRs();
 //        response.setData(new ArrayList<>());
         try {
-//            Account companion = accountRepository.findById(companionId)
-//                    .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
-
             Dialog dialog = dialogRepository
                     .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
@@ -130,27 +125,22 @@ public class DialogServiceImpl implements DialogService {
 
     @Override
     public DialogDto getDialog(UUID companionId) {
-        Dialog dialog = dialogRepository
-                .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()), companionId)
-                .orElse(createDialog(companionId));
+        UUID currentUser = UUID.fromString(GetCurrentUsername.getCurrentUsername());
+        Optional<Dialog> dialogOpt = dialogRepository
+                .findByParticipants(currentUser, companionId);
+        Dialog dialog = dialogOpt.orElseGet(() -> createDialog(currentUser, companionId));
+
         return MapperDialogToDto.convertDialogToDto(dialog);
 
     }
 
-//    @Transactional
-//    public Optional<Account> findById(UUID id) {
-//        return accountRepository.findByIdWithDialogsAndMessages(id);
-//    }
-
     @Transactional
-    private Dialog createDialog(UUID companion) {
-//        Account participantOne = accountRepository.findById(UUID.fromString(GetCurrentUsername.getCurrentUsername()))
-//                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
+    private Dialog createDialog(UUID currentUser, UUID companion) {
         Dialog dialog = new Dialog();
-        dialog.setParticipantOne(UUID.fromString(GetCurrentUsername.getCurrentUsername()));
+        dialog.setParticipantOne(currentUser);
         dialog.setParticipantTwo(companion);
         dialog.setUnreadCount(0L);
-        return dialogRepository.save(dialog); // Сохранение нового диалога
+        return dialogRepository.save(dialog);
     }
 
     public List<Dialog> getDialogsByUser(UUID userId) {

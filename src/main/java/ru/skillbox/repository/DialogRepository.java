@@ -15,11 +15,14 @@ import java.util.UUID;
 @Repository
 public interface DialogRepository extends JpaRepository<Dialog, Long> {
 
-    @EntityGraph(attributePaths = "messages")
-    @Query("SELECT d FROM Dialog d WHERE (d.participantOne = :participantOneId AND d.participantTwo = :participantTwoId) " +
+
+    @EntityGraph(attributePaths = {"messages"})
+    @Query("SELECT d FROM Dialog d WHERE " +
+            "(d.participantOne = :participantOneId AND d.participantTwo = :participantTwoId) " +
             "OR (d.participantOne = :participantTwoId AND d.participantTwo = :participantOneId)")
     Optional<Dialog> findByParticipants(@Param("participantOneId") UUID participantOneId,
-                                        @Param("participantTwoId") UUID participantTwoId);
+                                    @Param("participantTwoId") UUID participantTwoId);
+
 
     @EntityGraph(attributePaths = "messages")
     List<Dialog> findByParticipantOneOrParticipantTwo(UUID participantOne, UUID participantTwo);

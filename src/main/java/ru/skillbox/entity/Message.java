@@ -22,15 +22,6 @@ public class Message {
     @Column(name = "time", nullable = false)
     private LocalDateTime time;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "author_id", nullable = false)
-//    private Account author;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "recipient_id", nullable = false)
-//    private Account recipient;
-
-
     @Column(name = "author_id", nullable = false)
     private UUID author;
 

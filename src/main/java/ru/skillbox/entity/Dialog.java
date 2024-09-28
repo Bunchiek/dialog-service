@@ -22,14 +22,6 @@ public class Dialog {
     @Column(name = "unread_count", nullable = false)
     private Long unreadCount;
 
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "participant_one_id", nullable = false)
-//    private Account participantOne;
-//
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "participant_two_id", nullable = false)
-//    private Account participantTwo;
-
     @Column(name = "participant_one_id", nullable = false)
     private UUID participantOne;
     @Column(name = "participant_two_id", nullable = false)
