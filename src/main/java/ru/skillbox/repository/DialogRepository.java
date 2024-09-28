@@ -15,8 +15,8 @@ import java.util.UUID;
 public interface DialogRepository extends JpaRepository<Dialog, Long> {
 
 
-    @Query("SELECT d FROM Dialog d WHERE (d.participantOne.id = :participantOneId AND d.participantTwo.id = :participantTwoId) " +
-            "OR (d.participantOne.id = :participantTwoId AND d.participantTwo.id = :participantOneId)")
+    @Query("SELECT d FROM Dialog d WHERE (d.participantOne = :participantOneId AND d.participantTwo = :participantTwoId) " +
+            "OR (d.participantOne = :participantTwoId AND d.participantTwo = :participantOneId)")
     Optional<Dialog> findByParticipants(@Param("participantOneId") UUID participantOneId,
                                         @Param("participantTwoId") UUID participantTwoId);
 
