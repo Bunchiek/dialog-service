@@ -5,10 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skillbox.dto.GetDialogsRs;
-import ru.skillbox.dto.GetMessagesRs;
-import ru.skillbox.dto.SetStatusMessageReadRs;
-import ru.skillbox.dto.UnreadCountRs;
+import ru.skillbox.dto.*;
 import ru.skillbox.service.DialogService;
 
 import java.util.UUID;
@@ -22,8 +19,8 @@ public class DialogController {
 
 
     @GetMapping("/recipientId/{recipientId}")
-    public ResponseEntity<SetStatusMessageReadRs> getDialog(@PathVariable UUID recipientId) {
-        SetStatusMessageReadRs response = dialogService.setStatusMessageRead(recipientId);
+    public ResponseEntity<DialogDto> getDialog(@PathVariable UUID recipientId) {
+        DialogDto response = dialogService.getDialog(recipientId);
         return ResponseEntity.ok(response);
     }
 
@@ -47,7 +44,6 @@ public class DialogController {
         UnreadCountRs response = dialogService.getUnreadMessageCount();
         return ResponseEntity.ok(response);
     }
-
 
     @GetMapping("/messages")
     public ResponseEntity<GetMessagesRs> getAllMessages(

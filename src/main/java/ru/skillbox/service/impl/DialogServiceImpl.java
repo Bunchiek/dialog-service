@@ -107,7 +107,7 @@ public class DialogServiceImpl implements DialogService {
 
             Dialog dialog = dialogRepository
                     .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
-                    .orElseGet(() -> createDialog(companionId));
+                    .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
             List<MessageShortDto> messageDtos = messagesPage.getContent().stream()
@@ -126,6 +126,15 @@ public class DialogServiceImpl implements DialogService {
             response.setTimestamp(Instant.now().toEpochMilli());
         }
         return response;
+    }
+
+    @Override
+    public DialogDto getDialog(UUID companionId) {
+        Dialog dialog = dialogRepository
+                .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()), companionId)
+                .orElse(createDialog(companionId));
+        return MapperDialogToDto.convertDialogToDto(dialog);
+
     }
 
 //    @Transactional
