@@ -28,6 +28,6 @@ public class Dialog {
     private UUID participantTwo;
 
     @OneToMany(mappedBy = "dialog", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private Set<Message> messages = new HashSet<>();
+    private List<Message> messages = new ArrayList<>();
 
 }

@@ -37,20 +37,19 @@ public class DialogServiceImpl implements DialogService {
     @Transactional
     public SetStatusMessageReadRs setStatusMessageRead(UUID companionId) {
         SetStatusMessageReadRs response = new SetStatusMessageReadRs();
+        UUID currentUser = UUID.fromString(GetCurrentUsername.getCurrentUsername());
         try {
             Dialog dialog = dialogRepository
                     .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
-            dialog.getMessages().stream()
+            List<Message> udatedMessages = dialog.getMessages().stream()
+                    .filter(message -> message.getRecipient().equals(currentUser))
                     .filter(message -> message.getStatus() == Status.SENT)
-                    .forEach(message -> {
-                        message.setStatus(Status.READ);
-                        messageRepository.save(message);
-                    });
+                    .peek(message -> message.setStatus(Status.READ))
+                            .toList();
+            messageRepository.saveAll(udatedMessages);
             dialog.setUnreadCount(0L);
-            dialogRepository.save(dialog);
-
             response.setData(SetStatusMessageReadDto.builder().message("OK").build());
 
         } catch (EntityNotFoundException e) {
