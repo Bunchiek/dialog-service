@@ -17,8 +17,6 @@ import ru.skillbox.service.DialogService;
 import ru.skillbox.utils.GetCurrentUsername;
 import ru.skillbox.utils.impl.MapperDialogToDto;
 import ru.skillbox.utils.impl.MapperMessageToDto;
-import ru.skillbox.utils.impl.MapperMessageToShortDto;
-import ru.skillbox.utils.impl.MapperMessageToTempDTO;
 
 
 import java.time.Instant;

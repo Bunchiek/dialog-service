@@ -13,7 +13,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessageRs {
+public class MessageWebSocketRs {
 
     private LocalDateTime time;
     private UUID conversationPartner1;

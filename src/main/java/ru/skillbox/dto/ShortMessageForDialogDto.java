@@ -4,18 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.skillbox.entity.Status;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessageShortDto {
+public class ShortMessageForDialogDto {
 
-    private Long id;
-    private UUID authorId;
-    private Long time;
     private String messageText;
-
+    private LocalDateTime time;
+    private UUID authorId;
+    private Status readStatus;
 }

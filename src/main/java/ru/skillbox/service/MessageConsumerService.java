@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.skillbox.annotation.Loggable;
-import ru.skillbox.dto.MessageDto;
+import ru.skillbox.dto.MessageWebSocketDto;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
 import ru.skillbox.entity.Status;
@@ -23,17 +23,17 @@ public class MessageConsumerService {
 
     @Transactional
     @Loggable
-    public void saveMessage(MessageDto messageDTO) {
+    public void saveMessage(MessageWebSocketDto messageWebSocketDTO) {
 
-        UUID author = messageDTO.getConversationPartner1();
-        UUID recipient = messageDTO.getConversationPartner2();
+        UUID author = messageWebSocketDTO.getData().getConversationPartner1();
+        UUID recipient = messageWebSocketDTO.getRecipientId();
         Dialog dialog = findDialogForConversation(author, recipient);
 
         Message message = new Message();
-        message.setTime(messageDTO.getTime());
+        message.setTime(messageWebSocketDTO.getData().getTime());
         message.setAuthor(author);
         message.setRecipient(recipient);
-        message.setMessageText(message.getMessageText());
+        message.setMessageText(messageWebSocketDTO.getData().getMessageText());
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
 

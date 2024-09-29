@@ -1,5 +1,6 @@
 package ru.skillbox.dto;
 
+import jdk.jshell.Snippet;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class MessageDto  {
+public class MessageDto {
 
     private Long id;
     private String messageText;

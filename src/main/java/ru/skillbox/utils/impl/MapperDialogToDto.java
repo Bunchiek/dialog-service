@@ -3,7 +3,7 @@ package ru.skillbox.utils.impl;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
 import ru.skillbox.dto.DialogDto;
-import ru.skillbox.dto.MessageTestDto;
+import ru.skillbox.dto.ShortMessageForDialogDto;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
 
@@ -20,9 +20,9 @@ public class MapperDialogToDto {
         }
         List<Message> messages = Optional.ofNullable(dialog.getMessages()).orElse(Collections.emptyList());
 
-        List<MessageTestDto> lastMessage = messages.stream()
-                .map(MapperMessageToTempDTO::convertMessageToDto)
-                .sorted(Comparator.comparing(MessageTestDto::getTime))
+        List<ShortMessageForDialogDto> lastMessage = messages.stream()
+                .map(MapperMessageToDialogMessageDTO::convertMessageToDto)
+                .sorted(Comparator.comparing(ShortMessageForDialogDto::getTime).reversed())
                 .toList();
 
         return DialogDto.builder()

@@ -18,5 +18,5 @@ public class DialogDto {
     private Long unreadCount;
     private UUID conversationPartner1;
     private UUID conversationPartner2;
-    private List<MessageTestDto> lastMessage;
+    private List<ShortMessageForDialogDto> lastMessage;
 }
