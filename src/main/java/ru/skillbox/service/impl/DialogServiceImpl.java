@@ -106,7 +106,7 @@ public class DialogServiceImpl implements DialogService {
             Page<Message> messagesPage = messageRepository.findByDialog(dialog, pageable);
             List<MessageDto> messageDtos = messagesPage.getContent().stream()
                     .map(MapperMessageToDto::convertMessageToDto)
-                    .sorted(Comparator.comparing(MessageDto::getTime))
+                    .sorted(Comparator.comparing(MessageDto::getTime).reversed())
                     .toList();
 
             response.setTotal((int) messagesPage.getTotalElements());
