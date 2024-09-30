@@ -7,6 +7,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Component;
 import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageWebSocketDto;
+import ru.skillbox.dto.MessageWebSocketRs;
 
 @Component
 @RequiredArgsConstructor
@@ -18,7 +19,10 @@ public class MessageBrokerService {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageWebSocketDto messageWebSocketDTO) {
-        // Обработка сообщения и отправка его обратно клиентам через WebSocket
+        // Отправляем сообщение обратно клиентам через WebSocket
+        MessageWebSocketRs rs = messageWebSocketDTO.getData();
+        rs.setId(1L);
+        messageWebSocketDTO.setData(rs);
         messagingTemplate.convertAndSend("/topic/public", messageWebSocketDTO);
         messageConsumerService.saveMessage(messageWebSocketDTO);
     }

@@ -20,5 +20,6 @@ public class MessageWebSocketRs {
     private UUID  conversationPartner2;
     private String messageText;
     private Status readStatus;
+    private Long id;
 
 }
