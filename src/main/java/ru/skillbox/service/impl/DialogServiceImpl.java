@@ -33,12 +33,12 @@ public class DialogServiceImpl implements DialogService {
 
     @Override
     @Transactional
-    public SetStatusMessageReadRs setStatusMessageRead(UUID companionId) {
+    public SetStatusMessageReadRs setStatusMessageRead(Long dialogId) {
         SetStatusMessageReadRs response = new SetStatusMessageReadRs();
         UUID currentUser = UUID.fromString(GetCurrentUsername.getCurrentUsername());
         try {
             Dialog dialog = dialogRepository
-                    .findByParticipants(UUID.fromString(GetCurrentUsername.getCurrentUsername()),companionId)
+                    .findById(dialogId)
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
             List<Message> udatedMessages = dialog.getMessages().stream()

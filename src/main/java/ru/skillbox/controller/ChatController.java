@@ -19,12 +19,7 @@ public class ChatController {
     @Loggable
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
-        log.info("Received message: {}", messageWebSocketDTO);
-        try {
-            rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageWebSocketDTO);
-            log.info("Message successfully sent to RabbitMQ");
-        } catch (Exception e) {
-            log.error("Error sending message to RabbitMQ", e);
-        }
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageWebSocketDTO);
+        log.info("Message successfully sent to RabbitMQ");
     }
 }
