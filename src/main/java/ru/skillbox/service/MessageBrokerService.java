@@ -40,7 +40,8 @@ public class MessageBrokerService {
 
             // Отправляем сообщение в топик, связанный с диалогом
             String topic = "/topic/dialog/" + currentDialog.getId();
-            log.info("Sending message to WebSocket topic: {}", topic);
+            topic = topic.replaceAll("//", "/"); // Удаляем лишние слэши
+            log.info("Formatted topic path: '{}'", topic);
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
             // Сохраняем сообщение
