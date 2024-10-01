@@ -23,14 +23,38 @@ public class MessageBrokerService {
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageWebSocketDto messageWebSocketDTO) {
-        // Отправляем сообщение обратно клиентам через WebSocket
-        Dialog currentDialog = dialogRepository
-                .findByParticipants(messageWebSocketDTO.getData().getConversationPartner1(),messageWebSocketDTO.getData().getConversationPartner2())
-                .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
-        MessageWebSocketRs rs = messageWebSocketDTO.getData();
-        rs.setId(currentDialog.getId());
-        messageWebSocketDTO.setData(rs);
-        messagingTemplate.convertAndSend("/topic/public", messageWebSocketDTO);
-        messageConsumerService.saveMessage(messageWebSocketDTO);
+
+        // Логируем получение сообщения
+        log.info("Received message: {}", messageWebSocketDTO);
+
+        try {
+            // Поиск текущего диалога
+            Dialog currentDialog = dialogRepository
+                    .findByParticipants(messageWebSocketDTO.getData().getConversationPartner1(), messageWebSocketDTO.getData().getConversationPartner2())
+                    .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
+
+            // Логируем найденный диалог
+            log.info("Found dialog with ID: {}", currentDialog.getId());
+
+            // Устанавливаем ID диалога в ответе
+            MessageWebSocketRs rs = messageWebSocketDTO.getData();
+            rs.setId(currentDialog.getId());
+            messageWebSocketDTO.setData(rs);
+
+            // Отправляем сообщение обратно клиентам через WebSocket
+            log.info("Sending message to WebSocket: {}", messageWebSocketDTO);
+            messagingTemplate.convertAndSend("/topic/public", messageWebSocketDTO);
+
+            // Сохраняем сообщение
+            messageConsumerService.saveMessage(messageWebSocketDTO);
+            log.info("Message saved successfully.");
+
+        } catch (EntityNotFoundException e) {
+            // Логируем ошибку, если диалог не найден
+            log.error("Error finding dialog: {}", e.getMessage());
+        } catch (Exception e) {
+            // Логируем другие возможные ошибки
+            log.error("An error occurred: {}", e.getMessage(), e);
+        }
     }
 }
