@@ -39,7 +39,7 @@ public class MessageBrokerService {
             messageWebSocketDTO.setData(rs);
 
             // Отправляем сообщение в топик, связанный с диалогом
-            String topic = "/topic/dialog/" + currentDialog.getId();
+            String topic = "/app/topic/dialog/" + currentDialog.getId();  // Добавляем префикс "/app"
             log.info("Sending message to WebSocket topic: {}", topic);
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
@@ -53,4 +53,5 @@ public class MessageBrokerService {
             log.error("An error occurred: {}", e.getMessage(), e);
         }
     }
+
 }
