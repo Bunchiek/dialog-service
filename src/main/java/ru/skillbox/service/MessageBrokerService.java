@@ -24,9 +24,6 @@ public class MessageBrokerService {
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageWebSocketDto messageWebSocketDTO) {
 
-        // Логируем получение сообщения
-        log.info("Received message: {}", messageWebSocketDTO);
-
         try {
             // Поиск текущего диалога
             Dialog currentDialog = dialogRepository
@@ -41,19 +38,18 @@ public class MessageBrokerService {
             rs.setId(currentDialog.getId());
             messageWebSocketDTO.setData(rs);
 
-            // Отправляем сообщение обратно клиентам через WebSocket
-            log.info("Sending message to WebSocket: {}", messageWebSocketDTO);
-            messagingTemplate.convertAndSend("/topic/public", messageWebSocketDTO);
+            // Отправляем сообщение в топик, связанный с диалогом
+            String topic = "/topic/dialog/" + currentDialog.getId();
+            log.info("Sending message to WebSocket topic: {}", topic);
+            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
             // Сохраняем сообщение
             messageConsumerService.saveMessage(messageWebSocketDTO);
             log.info("Message saved successfully.");
 
         } catch (EntityNotFoundException e) {
-            // Логируем ошибку, если диалог не найден
             log.error("Error finding dialog: {}", e.getMessage());
         } catch (Exception e) {
-            // Логируем другие возможные ошибки
             log.error("An error occurred: {}", e.getMessage(), e);
         }
     }
