@@ -46,7 +46,7 @@ public class MessageBrokerService {
 
             // Сохраняем сообщение
             messageConsumerService.saveMessage(messageWebSocketDTO);
-            log.info("Message saved successfully .");
+            log.info("Message saved successfully.");
 
         } catch (EntityNotFoundException e) {
             log.error("Error finding dialog: {}", e.getMessage());
