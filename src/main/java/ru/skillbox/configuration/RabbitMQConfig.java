@@ -31,7 +31,8 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding binding(Queue messageQueue, TopicExchange messageExchange) {
-        return BindingBuilder.bind(messageQueue).to(messageExchange).with("chat.public");
+        // Используем шаблон маршрутизации для подписки на сообщения с ключами "topic.dialog.#"
+        return BindingBuilder.bind(messageQueue).to(messageExchange).with("topic.dialog.#");
     }
 
     @Bean
