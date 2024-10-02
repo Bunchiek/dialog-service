@@ -30,21 +30,14 @@ public class MessageBrokerService {
                     .findByParticipants(messageWebSocketDTO.getData().getConversationPartner1(), messageWebSocketDTO.getData().getConversationPartner2())
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
-            // Логируем найденный диалог
-            log.info("Found dialog with ID: {}", currentDialog.getId());
-
-            // Устанавливаем ID диалога в ответе
             MessageWebSocketRs rs = messageWebSocketDTO.getData();
             rs.setId(currentDialog.getId());
             messageWebSocketDTO.setData(rs);
 
-            // Отправляем сообщение в топик, связанный с диалогом
             String topic = "/topic/dialog/" + currentDialog.getId();
-            topic = topic.replaceAll("//", "/"); // Удаляем лишние слэши
             log.info("Formatted topic path: '{}'", topic);
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
-            // Сохраняем сообщение
             messageConsumerService.saveMessage(messageWebSocketDTO);
             log.info("Message saved successfully.");
 
