@@ -19,7 +19,8 @@ public class ChatController {
     @Loggable
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
-        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, "chat.public", messageWebSocketDTO);
-        log.info("Message successfully sent to RabbitMQ");
+        String routingKey = "topic.dialog." + messageWebSocketDTO.getData().getId();
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
+        log.info("Message sent to RabbitMQ with routing key: " + routingKey);
     }
 }
