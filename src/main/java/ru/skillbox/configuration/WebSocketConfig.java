@@ -26,11 +26,12 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer{
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableStompBrokerRelay("/topic", "/queue")
-                .setRelayHost(rabbitMqHost)
-                .setRelayPort(rabbitMqPort)
-                .setClientLogin(rabbitMqLogin)
-                .setClientPasscode(rabbitMqPassword);
+        config.enableSimpleBroker("/topic", "/queue")
+//                .setRelayHost(rabbitMqHost)
+//                .setRelayPort(rabbitMqPort)
+//                .setClientLogin(rabbitMqLogin)
+//                .setClientPasscode(rabbitMqPassword)
+        ;
         config.setApplicationDestinationPrefixes("/app");
     }
 
