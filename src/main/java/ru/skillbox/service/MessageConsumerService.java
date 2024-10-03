@@ -23,7 +23,7 @@ public class MessageConsumerService {
 
     @Transactional
     @Loggable
-    public void saveMessage(MessageWebSocketDto messageWebSocketDTO) {
+    public Message saveMessage(MessageWebSocketDto messageWebSocketDTO) {
 
         UUID author = messageWebSocketDTO.getData().getConversationPartner1();
         UUID recipient = messageWebSocketDTO.getRecipientId();
@@ -37,7 +37,7 @@ public class MessageConsumerService {
         message.setStatus(Status.SENT);
         message.setDialog(dialog);
 
-        messageRepository.save(message);
+        return messageRepository.save(message);
     }
 
     private Dialog findDialogForConversation(UUID author, UUID recipient) {
