@@ -10,6 +10,7 @@ import ru.skillbox.annotation.Loggable;
 import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageWebSocketDto;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import ru.skillbox.dto.MessageWebSocketRs;
 import ru.skillbox.entity.Message;
 import ru.skillbox.service.MessageConsumerService;
 
@@ -32,7 +33,11 @@ public class ChatController {
 
         Message newMessage = messageConsumerService.saveMessage(messageWebSocketDTO);
 
-        messageWebSocketDTO.getData().setId(newMessage.getId());
+        MessageWebSocketRs rs = messageWebSocketDTO.getData();
+        rs.setId(newMessage.getId());
+        messageWebSocketDTO.setData(rs);
+        log.info("Message sent to {}", messageWebSocketDTO);
+
 
         String destination = "/topic/dialog/" + messageWebSocketDTO.getData().getId();
         messagingTemplate.convertAndSend(destination, messageWebSocketDTO);
