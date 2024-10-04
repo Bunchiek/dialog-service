@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import ru.skillbox.configuration.RabbitMQConfig;
@@ -19,6 +20,7 @@ public class ChatController {
     private final RabbitTemplate rabbitTemplate;
 
     @MessageMapping("/chat.sendMessage")
+    @SendTo("/topic/dialog")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
         log.info("Received message from client: {}", messageWebSocketDTO);
         // Генерация ключа маршрутизации на основе идентификатора диалога
