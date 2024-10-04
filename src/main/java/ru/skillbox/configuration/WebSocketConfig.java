@@ -1,7 +1,9 @@
 package ru.skillbox.configuration;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.logging.LoggingRebinder;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.MessageChannel;
@@ -14,8 +16,10 @@ import org.springframework.web.socket.config.annotation.*;
 @Configuration
 @EnableWebSocketMessageBroker
 @RequiredArgsConstructor
+@Slf4j
 public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
 
+    private final LoggingRebinder loggingRebinder;
     @Value("${app.rabbitMQ.host}")
     private String rabbitMqHost;
 
@@ -30,12 +34,14 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
+        log.info("Configuring Message Broker...");
         config.enableStompBrokerRelay("/topic", "/queue")
                 .setRelayHost(rabbitMqHost)
                 .setRelayPort(rabbitMqPort)
                 .setClientLogin(rabbitMqLogin)
                 .setClientPasscode(rabbitMqPassword);
         config.setApplicationDestinationPrefixes("/app");
+        log.info("Message Broker configured with prefixes: /topic, /queue");
     }
 
     @Override
@@ -49,7 +55,7 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                System.out.println("Received message from client: " + message);
+                log.info("Received message from client: " + message);
                 return message;
             }
         });
