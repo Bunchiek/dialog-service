@@ -17,7 +17,7 @@ import ru.skillbox.repository.DialogRepository;
 @Slf4j
 public class MessageBrokerService {
 
-    private final SimpMessagingTemplate messagingTemplate;
+//    private final SimpMessagingTemplate messagingTemplate;
     private final MessageConsumerService messageConsumerService;
     private final DialogRepository dialogRepository;
 
@@ -36,7 +36,7 @@ public class MessageBrokerService {
 
             String topic = "/topic/dialog/" + currentDialog.getId();
             log.info("Formatted topic path: '{}'", topic);
-            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
+//            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
             messageConsumerService.saveMessage(messageWebSocketDTO);
             log.info("Message saved successfully.");
