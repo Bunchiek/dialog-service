@@ -21,5 +21,6 @@ public class MessageWebSocketRs {
     private String messageText;
     private Status readStatus;
     private Long id;
+    private Long dialogId;
 
 }

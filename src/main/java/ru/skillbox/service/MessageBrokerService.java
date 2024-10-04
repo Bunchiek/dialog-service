@@ -17,29 +17,34 @@ import ru.skillbox.repository.DialogRepository;
 @Slf4j
 public class MessageBrokerService {
 
-//    private final SimpMessagingTemplate messagingTemplate;
+    private final SimpMessagingTemplate messagingTemplate;
     private final MessageConsumerService messageConsumerService;
     private final DialogRepository dialogRepository;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_NAME)
     public void receiveMessage(MessageWebSocketDto messageWebSocketDTO) {
-
         try {
             // Поиск текущего диалога
             Dialog currentDialog = dialogRepository
-                    .findByParticipants(messageWebSocketDTO.getData().getConversationPartner1(), messageWebSocketDTO.getData().getConversationPartner2())
+                    .findByParticipants(
+                            messageWebSocketDTO.getData().getConversationPartner1(),
+                            messageWebSocketDTO.getData().getConversationPartner2())
                     .orElseThrow(() -> new EntityNotFoundException("Диалог не найден"));
 
+            // Устанавливаем ID диалога в сообщение
             MessageWebSocketRs rs = messageWebSocketDTO.getData();
             rs.setId(currentDialog.getId());
             messageWebSocketDTO.setData(rs);
 
-            String topic = "/topic/dialog/" + currentDialog.getId();
-            log.info("Formatted topic path: '{}'", topic);
-//            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
-
+            // Сохраняем сообщение
             messageConsumerService.saveMessage(messageWebSocketDTO);
             log.info("Message saved successfully.");
+
+            // Отправка сообщения клиентам через WebSocket
+            String topic = "/topic/dialog/" + currentDialog.getId();
+            log.info("Formatted topic path: '{}'", topic);
+            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
+            log.info("Message sent to WebSocket topic: {}", topic);
 
         } catch (EntityNotFoundException e) {
             log.error("Error finding dialog: {}", e.getMessage());
@@ -47,6 +52,4 @@ public class MessageBrokerService {
             log.error("An error occurred: {}", e.getMessage(), e);
         }
     }
-
-
 }
