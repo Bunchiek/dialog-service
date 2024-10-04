@@ -34,7 +34,7 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        log.info("Configuring Message Broker...");
+        log.info("[WEBSOCKET] Configuring Message Broker...");
         config.enableStompBrokerRelay("/topic")
                 .setRelayHost(rabbitMqHost)
                 .setRelayPort(rabbitMqPort)
@@ -43,7 +43,7 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
                 .setSystemLogin(rabbitMqLogin)
                 .setSystemPasscode(rabbitMqPassword);
         config.setApplicationDestinationPrefixes("/app");
-        log.info("Message Broker configured with prefixes: /topic, /queue");
+        log.info("[WEBSOCKET] Message Broker configured with prefixes: /topic, /queue");
     }
 
     @Override
@@ -58,7 +58,7 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
         registration.interceptors(new ChannelInterceptor() {
             @Override
             public Message<?> preSend(Message<?> message, MessageChannel channel) {
-                log.info("Received message from client: " + message);
+                log.info("[WEBSOCKET] Received message from client: " + message);
                 return message;
             }
         });

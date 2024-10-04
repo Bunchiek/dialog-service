@@ -20,14 +20,13 @@ public class ChatController {
     private final RabbitTemplate rabbitTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/dialog")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
-        log.info("Received message from client: {}", messageWebSocketDTO);
+        log.info("[CONTROLLER] Received message from client: {}", messageWebSocketDTO);
         // Генерация ключа маршрутизации на основе идентификатора диалога
         String routingKey = "topic.dialog." + messageWebSocketDTO.getData().getId();
 
         // Отправка сообщения в RabbitMQ
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
-        log.info("Message sent to RabbitMQ with routing key: " + routingKey);
+        log.info("[CONTROLLER] Message sent to RabbitMQ with routing key: " + routingKey);
     }
 }
