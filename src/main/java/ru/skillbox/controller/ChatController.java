@@ -20,6 +20,7 @@ public class ChatController {
 
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
+        log.info("Received message from client: {}", messageWebSocketDTO);
         // Генерация ключа маршрутизации на основе идентификатора диалога
         String routingKey = "topic.dialog." + messageWebSocketDTO.getData().getId();
 
