@@ -26,6 +26,6 @@ public class ChatController {
 
         // Отправка сообщения в RabbitMQ
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
-        log.info("Message sent to RabbitMQ with routing key: {}", routingKey);
+        log.info("Message sent to RabbitMQ with routing key: " + routingKey);
     }
 }

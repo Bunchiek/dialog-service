@@ -35,11 +35,13 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
         log.info("Configuring Message Broker...");
-        config.enableStompBrokerRelay("/topic", "/queue")
+        config.enableStompBrokerRelay("/topic")
                 .setRelayHost(rabbitMqHost)
                 .setRelayPort(rabbitMqPort)
                 .setClientLogin(rabbitMqLogin)
-                .setClientPasscode(rabbitMqPassword);
+                .setClientPasscode(rabbitMqPassword)
+                .setSystemLogin(rabbitMqLogin)
+                .setSystemPasscode(rabbitMqPassword);
         config.setApplicationDestinationPrefixes("/app");
         log.info("Message Broker configured with prefixes: /topic, /queue");
     }
@@ -49,6 +51,17 @@ public class WebSocketConfig  implements WebSocketMessageBrokerConfigurer {
         registry.addEndpoint("/api/v1/streaming/ws")
                 .setAllowedOriginPatterns("*");
     }
+
+//    @Override
+//    public void configureMessageBroker(MessageBrokerRegistry registry) {
+//        registry.setApplicationDestinationPrefixes("/app");
+//        registry.enableStompBrokerRelay("/topic")
+//                .setRelayHost("localhost")
+//                .setRelayPort(61613)
+//                .setClientLogin("guest")
+//                .setClientPasscode("guest");
+//    }
+
 
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
