@@ -17,7 +17,7 @@ public class RabbitMQConfig {
 
 
     public static final String QUEUE_NAME = "message-queue";
-    public static final String EXCHANGE_NAME = "message-exchange";
+    public static final String EXCHANGE_NAME = "amq.topic";
 
     @Bean
     public Queue messageQueue() {
