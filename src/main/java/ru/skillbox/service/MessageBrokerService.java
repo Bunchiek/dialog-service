@@ -10,6 +10,7 @@ import ru.skillbox.configuration.RabbitMQConfig;
 import ru.skillbox.dto.MessageWebSocketDto;
 import ru.skillbox.dto.MessageWebSocketRs;
 import ru.skillbox.entity.Dialog;
+import ru.skillbox.entity.Message;
 import ru.skillbox.repository.DialogRepository;
 
 @Component
@@ -37,7 +38,8 @@ public class MessageBrokerService {
             messageWebSocketDTO.setData(rs);
 
             // Сохраняем сообщение
-            messageConsumerService.saveMessage(messageWebSocketDTO);
+            Message newMessage = messageConsumerService.saveMessage(messageWebSocketDTO);
+            messageWebSocketDTO.setId(newMessage.getId());
             log.info("Message saved successfully.");
 
             // Отправка сообщения клиентам через WebSocket
