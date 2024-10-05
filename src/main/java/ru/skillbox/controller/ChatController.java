@@ -23,7 +23,7 @@ public class ChatController {
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
         log.info("[CONTROLLER] Received message from client: {}", messageWebSocketDTO);
         // Генерация ключа маршрутизации на основе идентификатора диалога
-        String routingKey = "topic.dialog." + messageWebSocketDTO.getData().getId();
+        String routingKey = "topic." + messageWebSocketDTO.getData().getId();
 
         // Отправка сообщения в RabbitMQ
         rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
