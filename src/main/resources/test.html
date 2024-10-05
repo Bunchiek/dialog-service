@@ -15,17 +15,17 @@
     stompClient.connect({}, function (frame) {
         console.log('Connected: ' + frame);
 
-        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({
-            type: "MESSAGE",
-            recipientId: "b5b3b733-c4b2-420d-86fc-066ed7906d70",
-            data: {
-                time: "2024-09-28T14:55:30.123456789",
-                conversationPartner1: "bdb96833-accd-4207-95d8-9c4e8595c1ca",
-                conversationPartner2: "b5b3b733-c4b2-420d-86fc-066ed7906d70",
-                messageText: "Привет!",
-                readStatus: null
-            }
-        }));
+<!--        stompClient.send("/app/chat.sendMessage", {}, JSON.stringify({-->
+<!--            type: "MESSAGE",-->
+<!--            recipientId: "b5b3b733-c4b2-420d-86fc-066ed7906d70",-->
+<!--            data: {-->
+<!--                time: "2024-09-28T14:55:30.123456789",-->
+<!--                conversationPartner1: "bdb96833-accd-4207-95d8-9c4e8595c1ca",-->
+<!--                conversationPartner2: "b5b3b733-c4b2-420d-86fc-066ed7906d70",-->
+<!--                messageText: "Привет!",-->
+<!--                readStatus: null-->
+<!--            }-->
+<!--        }));-->
     }, function (error) {
         console.log('Connection error: ' + error);
     });
