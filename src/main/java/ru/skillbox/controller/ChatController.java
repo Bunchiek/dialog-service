@@ -20,7 +20,6 @@ public class ChatController {
     private final RabbitTemplate rabbitTemplate;
 
     @MessageMapping("/chat.sendMessage")
-    @SendTo("/topic/35")
     public void sendMessage(MessageWebSocketDto messageWebSocketDTO) {
         log.info("[CONTROLLER] Received message from client: {}", messageWebSocketDTO);
         // Генерация ключа маршрутизации на основе идентификатора диалога
