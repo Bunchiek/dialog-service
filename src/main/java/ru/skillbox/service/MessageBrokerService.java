@@ -41,7 +41,7 @@ public class MessageBrokerService {
             log.info("Message saved successfully.");
 
             // Отправка сообщения клиентам через WebSocket
-            String topic = "/topic/dialog/" + currentDialog.getId();
+            String topic = "/topic/" + currentDialog.getId();
             log.info("Formatted topic path: '{}'", topic);
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
             log.info("Message sent to WebSocket topic: {}", topic);
