@@ -67,7 +67,7 @@ public class DialogServiceImpl implements DialogService {
         try {
             List<Dialog> dialogs = getDialogsByUser(currentUser);
             dialogDtoList = dialogs.stream()
-                    .map(MapperDialogToDto::convertDialogToDto)
+                    .map(dialog ->MapperDialogToDto.convertDialogToDto(dialog, currentUser))
                     .toList();
         } catch (EntityNotFoundException e) {
             log.info(e.getMessage());
@@ -129,7 +129,7 @@ public class DialogServiceImpl implements DialogService {
                 .findByParticipants(currentUser, companionId);
         Dialog dialog = dialogOpt.orElseGet(() -> createDialog(currentUser, companionId));
 
-        return MapperDialogToDto.convertDialogToDto(dialog);
+        return MapperDialogToDto.convertDialogToDto(dialog, currentUser);
 
     }
 

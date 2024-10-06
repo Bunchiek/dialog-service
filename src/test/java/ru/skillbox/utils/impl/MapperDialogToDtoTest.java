@@ -1,84 +1,99 @@
 package ru.skillbox.utils.impl;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 import ru.skillbox.dto.DialogDto;
+import ru.skillbox.dto.ShortMessageForDialogDto;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
 import ru.skillbox.entity.Status;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.doReturn;
 
 class MapperDialogToDtoTest {
 
-    @Test
-    void convertDialogToDto_shouldReturnCorrectDto() {
-        Dialog dialog = Mockito.mock(Dialog.class);
+    private Dialog dialog;
+    private UUID currentUserId;
+    private UUID companionId;
 
-        Message message1 = Mockito.mock(Message.class);
-        Message message2 = Mockito.mock(Message.class);
+    @BeforeEach
+    void setUp() {
+        currentUserId = UUID.randomUUID();
+        companionId = UUID.randomUUID();
 
-        LocalDateTime time1 = LocalDateTime.of(2024, 10, 5, 10, 0);
-        LocalDateTime time2 = LocalDateTime.of(2024, 10, 6, 12, 0);
-        UUID authorId = UUID.randomUUID();
-        UUID recipientId = UUID.randomUUID();
+        dialog = new Dialog();
+        dialog.setId(1L);
+        dialog.setParticipantOne(currentUserId);
+        dialog.setParticipantTwo(companionId);
 
-        doReturn(time1).when(message1).getTime();
-        doReturn(Status.SENT).when(message1).getStatus();
-        doReturn(time2).when(message2).getTime();
-        doReturn(Status.READ).when(message2).getStatus();
+        Message message1 = new Message();
+        message1.setId(1L);
+        message1.setAuthor(companionId);
+        message1.setRecipient(currentUserId);
+        message1.setStatus(Status.SENT);
+        message1.setTime(LocalDateTime.now());
 
-        List<Message> messages = Arrays.asList(message1, message2);
+        Message message2 = new Message();
+        message2.setId(2L);
+        message2.setAuthor(currentUserId);
+        message2.setRecipient(companionId);
+        message2.setStatus(Status.READ);
+        message2.setTime(LocalDateTime.now().minusMinutes(1));
 
-        doReturn(1L).when(dialog).getId();
-        doReturn(authorId).when(dialog).getParticipantOne();
-        doReturn(recipientId).when(dialog).getParticipantTwo();
-        doReturn(messages).when(dialog).getMessages();
-
-        DialogDto dto = MapperDialogToDto.convertDialogToDto(dialog);
-
-        assertNotNull(dto);
-
-        assertEquals(1L, dto.getId());
-        assertEquals(authorId, dto.getConversationPartner1());
-        assertEquals(recipientId, dto.getConversationPartner2());
-        assertEquals(1, dto.getUnreadCount());
+        dialog.setMessages(List.of(message1, message2));
     }
 
     @Test
-    void convertDialogToDto_shouldReturnDtoWithNoMessages() {
-        Dialog dialog = Mockito.mock(Dialog.class);
+    void convertDialogToDto_shouldMapDialogToDtoCorrectly() {
+        // Act
+        DialogDto dialogDto = MapperDialogToDto.convertDialogToDto(dialog, currentUserId);
 
-        UUID participantOne = UUID.randomUUID();
-        UUID participantTwo = UUID.randomUUID();
+        // Assert
+        assertNotNull(dialogDto);
+        assertEquals(dialog.getId(), dialogDto.getId());
+        assertEquals(dialog.getParticipantOne(), dialogDto.getConversationPartner1());
+        assertEquals(dialog.getParticipantTwo(), dialogDto.getConversationPartner2());
 
-        doReturn(1L).when(dialog).getId();
-        doReturn(participantOne).when(dialog).getParticipantOne();
-        doReturn(participantTwo).when(dialog).getParticipantTwo();
-        doReturn(Collections.emptyList()).when(dialog).getMessages();
+        assertEquals(1, dialogDto.getUnreadCount());
 
-        DialogDto dto = MapperDialogToDto.convertDialogToDto(dialog);
-
-        assertNotNull(dto);
-
-        assertEquals(1L, dto.getId());
-        assertEquals(participantOne, dto.getConversationPartner1());
-        assertEquals(participantTwo, dto.getConversationPartner2());
-        assertNull(dto.getLastMessage());
-        assertEquals(0, dto.getUnreadCount()); // Нет непрочитанных сообщений
+        // Проверка последнего сообщения
+        List<ShortMessageForDialogDto> lastMessages = dialogDto.getLastMessage();
+        assertNotNull(lastMessages);
+        assertEquals(2, lastMessages.size());
+        assertTrue(lastMessages.get(0).getTime().isAfter(lastMessages.get(1).getTime()));
     }
 
     @Test
-    void convertDialogToDto_shouldReturnNullWhenDialogIsNull() {
-        DialogDto dto = MapperDialogToDto.convertDialogToDto(null);
+    void convertDialogToDto_shouldReturnNullForNullDialog() {
+        // Act
+        DialogDto dialogDto = MapperDialogToDto.convertDialogToDto(null, currentUserId);
 
-        assertNull(dto);
+        // Assert
+        assertNull(dialogDto);
+    }
+
+    @Test
+    void convertDialogToDto_shouldReturnZeroUnreadCountWhenAllMessagesAreFromCurrentUser() {
+        // Изменение сообщений так, чтобы все они были отправлены текущим пользователем
+        Message message1 = new Message();
+        message1.setId(1L);
+        message1.setAuthor(currentUserId);
+        message1.setRecipient(companionId);
+        message1.setStatus(Status.SENT);
+        message1.setTime(LocalDateTime.now());
+
+        dialog.setMessages(List.of(message1));
+
+        // Act
+        DialogDto dialogDto = MapperDialogToDto.convertDialogToDto(dialog, currentUserId);
+
+        // Assert
+        assertNotNull(dialogDto);
+        assertEquals(0, dialogDto.getUnreadCount()); // Непрочитанных сообщений нет, так как они отправлены текущим пользователем
     }
 }

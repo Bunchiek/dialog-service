@@ -15,7 +15,7 @@ import java.util.*;
 @Slf4j
 public class MapperDialogToDto {
 
-    public static DialogDto convertDialogToDto(Dialog dialog) {
+    public static DialogDto convertDialogToDto(Dialog dialog, UUID currentUserId) {
         if (dialog == null) {
             return null;
         }
@@ -23,6 +23,7 @@ public class MapperDialogToDto {
 
         Long unreadCount = messages.stream()
                 .filter(message -> message.getStatus().equals(Status.SENT))
+                .filter(message -> !message.getAuthor().equals(currentUserId))
                 .count();
 
         List<ShortMessageForDialogDto> lastMessage = messages.stream()
