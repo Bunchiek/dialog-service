@@ -4,7 +4,6 @@
 
 CREATE TABLE dialogs (
     id BIGSERIAL PRIMARY KEY,
-    unread_count BIGINT NOT NULL,
     participant_one_id UUID NOT NULL,
     participant_two_id UUID NOT NULL
 );

@@ -19,9 +19,6 @@ public class Dialog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "unread_count", nullable = false)
-    private Long unreadCount;
-
     @Column(name = "participant_one_id", nullable = false)
     private UUID participantOne;
     @Column(name = "participant_two_id", nullable = false)

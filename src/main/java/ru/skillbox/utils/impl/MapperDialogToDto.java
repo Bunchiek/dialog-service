@@ -6,6 +6,7 @@ import ru.skillbox.dto.DialogDto;
 import ru.skillbox.dto.ShortMessageForDialogDto;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
+import ru.skillbox.entity.Status;
 
 import java.util.*;
 
@@ -19,16 +20,19 @@ public class MapperDialogToDto {
             return null;
         }
         List<Message> messages = Optional.ofNullable(dialog.getMessages()).orElse(Collections.emptyList());
+        Long unreadCount = messages.stream()
+                .filter(message -> message.getStatus().equals(Status.SENT))
+                .count();
 
-        List<ShortMessageForDialogDto> lastMessage = messages.stream()
-                .map(MapperMessageToDialogMessageDTO::convertMessageToDto)
-                .sorted(Comparator.comparing(ShortMessageForDialogDto::getTime).reversed())
-                .toList();
+        ShortMessageForDialogDto lastMessage = messages.stream()
+                .map(MapperMessageToDialogMessageDTO::convertMessageToDto).max(Comparator.comparing(ShortMessageForDialogDto::getTime))
+                .orElse(null);
+
 
         return DialogDto.builder()
                 .id(dialog.getId())
                 .lastMessage(lastMessage)
-                .unreadCount(dialog.getUnreadCount())
+                .unreadCount(unreadCount)
                 .conversationPartner1(dialog.getParticipantOne())
                 .conversationPartner2(dialog.getParticipantTwo())
                 .build();
