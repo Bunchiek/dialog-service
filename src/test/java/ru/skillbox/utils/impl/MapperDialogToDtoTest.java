@@ -1,67 +1,84 @@
-//package ru.skillbox.utils.impl;
-//
-//
-//import static org.junit.jupiter.api.Assertions.*;
-//
-//import org.junit.jupiter.api.Test;
-//import ru.skillbox.dto.DialogDto;
-//import ru.skillbox.entity.Dialog;
-//import ru.skillbox.entity.Message;
-//
-//import java.util.Collections;
-//
-//public class MapperDialogToDtoTest {
-//
-//
-//
-//    @Test
-//    public void testConvertDialogToDto_WithValidDialog() {
-//        Dialog dialog = new Dialog();
-//        dialog.setId(1L);
-//        dialog.setUnreadCount(10L);
-//
-//        Message lastMessage = new Message();
-//        lastMessage.setMessageText("Test message");
-//        dialog.setMessages(Collections.singletonList(lastMessage));
-//
-//        DialogDto result = MapperDialogToDto.convertDialogToDto(dialog);
-//
-//        assertNotNull(result, "Result should not be null");
-//
-//        assertNotNull(result.getLastMessage(), "Last message should not be null");
-//        assertEquals(lastMessage.getMessageText(), result.getLastMessage().getMessageText(), "Message text should match");
-//
-//        assertEquals(dialog.getId(), result.getId(), "ID should match");
-//        assertEquals(dialog.getUnreadCount(), result.getUnreadCount(), "Unread count should match");
-//    }
-//
-//    @Test
-//    void testConvertDialogToDto_WithNullDialog() {
-//        // Act
-//        DialogDto dialogDto = MapperDialogToDto.convertDialogToDto(null);
-//
-//        // Assert
-//        assertNull(dialogDto);
-//    }
-//
-//    @Test
-//    public void testConvertDialogToDto_WithEmptyMessages() {
-//        Dialog dialog = new Dialog();
-//        dialog.setMessages(Collections.emptyList());
-//        dialog.setId(1L);
-//        dialog.setUnreadCount(0L);
-//
-//        DialogDto result = MapperDialogToDto.convertDialogToDto(dialog);
-//
-//        assertNotNull(result, "Result should not be null");
-//
-//        assertNull(result.getLastMessage(), "Last message should be null when messages are empty");
-//
-//        assertEquals(dialog.getId(), result.getId(), "ID should match");
-//        assertEquals(dialog.getUnreadCount(), result.getUnreadCount(), "Unread count should match");
-//    }
-//
-//
-//
-//
-//}
+package ru.skillbox.utils.impl;
+
+import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import ru.skillbox.dto.DialogDto;
+import ru.skillbox.entity.Dialog;
+import ru.skillbox.entity.Message;
+import ru.skillbox.entity.Status;
+
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doReturn;
+
+class MapperDialogToDtoTest {
+
+    @Test
+    void convertDialogToDto_shouldReturnCorrectDto() {
+        Dialog dialog = Mockito.mock(Dialog.class);
+
+        Message message1 = Mockito.mock(Message.class);
+        Message message2 = Mockito.mock(Message.class);
+
+        LocalDateTime time1 = LocalDateTime.of(2024, 10, 5, 10, 0);
+        LocalDateTime time2 = LocalDateTime.of(2024, 10, 6, 12, 0);
+        UUID authorId = UUID.randomUUID();
+        UUID recipientId = UUID.randomUUID();
+
+        doReturn(time1).when(message1).getTime();
+        doReturn(Status.SENT).when(message1).getStatus();
+        doReturn(time2).when(message2).getTime();
+        doReturn(Status.READ).when(message2).getStatus();
+
+        List<Message> messages = Arrays.asList(message1, message2);
+
+        doReturn(1L).when(dialog).getId();
+        doReturn(authorId).when(dialog).getParticipantOne();
+        doReturn(recipientId).when(dialog).getParticipantTwo();
+        doReturn(messages).when(dialog).getMessages();
+
+        DialogDto dto = MapperDialogToDto.convertDialogToDto(dialog);
+
+        assertNotNull(dto);
+
+        assertEquals(1L, dto.getId());
+        assertEquals(authorId, dto.getConversationPartner1());
+        assertEquals(recipientId, dto.getConversationPartner2());
+        assertEquals(1, dto.getUnreadCount());
+    }
+
+    @Test
+    void convertDialogToDto_shouldReturnDtoWithNoMessages() {
+        Dialog dialog = Mockito.mock(Dialog.class);
+
+        UUID participantOne = UUID.randomUUID();
+        UUID participantTwo = UUID.randomUUID();
+
+        doReturn(1L).when(dialog).getId();
+        doReturn(participantOne).when(dialog).getParticipantOne();
+        doReturn(participantTwo).when(dialog).getParticipantTwo();
+        doReturn(Collections.emptyList()).when(dialog).getMessages();
+
+        DialogDto dto = MapperDialogToDto.convertDialogToDto(dialog);
+
+        assertNotNull(dto);
+
+        assertEquals(1L, dto.getId());
+        assertEquals(participantOne, dto.getConversationPartner1());
+        assertEquals(participantTwo, dto.getConversationPartner2());
+        assertNull(dto.getLastMessage());
+        assertEquals(0, dto.getUnreadCount()); // Нет непрочитанных сообщений
+    }
+
+    @Test
+    void convertDialogToDto_shouldReturnNullWhenDialogIsNull() {
+        DialogDto dto = MapperDialogToDto.convertDialogToDto(null);
+
+        assertNull(dto);
+    }
+}

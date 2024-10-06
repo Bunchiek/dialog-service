@@ -1,99 +1,134 @@
-//package ru.skillbox.service;
-//
-//import org.junit.jupiter.api.BeforeEach;
-//import org.junit.jupiter.api.Test;
-//import org.mockito.InjectMocks;
-//import org.mockito.Mock;
-//import org.mockito.MockitoAnnotations;
-//import ru.skillbox.dto.MessageDto;
-//import ru.skillbox.entity.Account;
-//import ru.skillbox.entity.Dialog;
-//import ru.skillbox.entity.Message;
-//import ru.skillbox.repository.AccountRepository;
-//import ru.skillbox.repository.DialogRepository;
-//import ru.skillbox.repository.MessageRepository;
-//import java.time.Instant;
-//import java.util.*;
-//
-//import static org.junit.jupiter.api.Assertions.assertThrows;
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.*;
-//
-//public class MessageConsumerServiceTest {
-//
-//    @Mock
-//    private MessageRepository messageRepository;
-//
-//    @Mock
-//    private AccountRepository accountRepository;
-//
-//    @Mock
-//    private DialogRepository dialogRepository;
-//
-//    @InjectMocks
-//    private MessageConsumerService messageConsumerService;
-//
-//    private MessageDto messageDto;
-//    private Account author;
-//    private Account recipient;
-//    private Dialog dialog;
-//
-//    @BeforeEach
-//    public void setUp() {
-//        MockitoAnnotations.openMocks(this);
-//
-//        author = new Account();
-//        author.setId(UUID.fromString("550e8400-e29b-41d4-a716-446655440000"));
-//        recipient = new Account();
-//        recipient.setId(UUID.fromString("550e8400-e29b-41d4-a716-446655440001"));
-//
-//        dialog = new Dialog();
-//        dialog.setId(1L);
-//        dialog.setConversationPartner(recipient);
-//        author.setDialogs(Set.of(dialog));
-//
-//        messageDto = new MessageDto();
-//        messageDto.setAuthorId(author.getId());
-//        messageDto.setRecipientId(recipient.getId());
-//        messageDto.setTime(Instant.now().toEpochMilli());
-//        messageDto.setMessageText("Test message");
-//    }
-//
-//    @Test
-//    public void testSaveMessage_Success() {
-//        when(accountRepository.findById(author.getId())).thenReturn(Optional.of(author));
-//        when(accountRepository.findById(recipient.getId())).thenReturn(Optional.of(recipient));
-//        when(dialogRepository.findById(1L)).thenReturn(Optional.of(dialog));
-//
-//        messageConsumerService.saveMessage(messageDto);
-//
-//        verify(messageRepository, times(1)).save(any(Message.class));
-//    }
-//
-//    @Test
-//    public void testSaveMessage_AuthorNotFound() {
-//        when(accountRepository.findById(author.getId())).thenReturn(Optional.empty());
-//
-//        assertThrows(NoSuchElementException.class, () -> messageConsumerService.saveMessage(messageDto));
-//
-//        verify(messageRepository, never()).save(any(Message.class));
-//    }
-//
-//    @Test
-//    public void testSaveMessage_DialogNotFound() {
-//        Account authorMock = mock(Account.class);
-//        Account recipientMock = mock(Account.class);
-//
-//        when(accountRepository.findById(author.getId())).thenReturn(Optional.of(authorMock));
-//        when(accountRepository.findById(recipient.getId())).thenReturn(Optional.of(recipientMock));
-//
-//        when(authorMock.getDialogs()).thenReturn(Collections.emptyList());
-//
-//        assertThrows(NoSuchElementException.class, () -> messageConsumerService.saveMessage(messageDto));
-//
-//        verify(messageRepository, never()).save(any(Message.class));
-//    }
-//
-//}
-//
-//
+package ru.skillbox.service;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import ru.skillbox.dto.MessageWebSocketDto;
+import ru.skillbox.dto.MessageWebSocketRs;
+import ru.skillbox.entity.Dialog;
+import ru.skillbox.entity.Message;
+import ru.skillbox.entity.Status;
+import ru.skillbox.repository.DialogRepository;
+import ru.skillbox.repository.MessageRepository;
+import ru.skillbox.service.MessageConsumerService;
+
+import java.time.LocalDateTime;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
+
+class MessageConsumerServiceTest {
+
+    @Mock
+    private MessageRepository messageRepository;
+
+    @Mock
+    private DialogRepository dialogRepository;
+
+    @InjectMocks
+    private MessageConsumerService messageConsumerService;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    void saveMessage_shouldSaveMessageSuccessfully() {
+        Dialog dialog = mock(Dialog.class);
+
+        UUID authorId = UUID.randomUUID();
+        UUID recipientId = UUID.randomUUID();
+        LocalDateTime time = LocalDateTime.now();
+        String messageText = "Test message";
+
+        MessageWebSocketRs messageWebSocketRs = MessageWebSocketRs.builder()
+                .conversationPartner1(authorId)
+                .conversationPartner2(recipientId)
+                .time(time)
+                .messageText(messageText)
+                .readStatus(Status.SENT)
+                .build();
+
+        MessageWebSocketDto messageWebSocketDto = MessageWebSocketDto.builder()
+                .recipientId(recipientId)
+                .data(messageWebSocketRs)
+                .build();
+
+        when(dialogRepository.findByParticipants(any(UUID.class), any(UUID.class))).thenReturn(Optional.of(dialog));
+        when(messageRepository.save(any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0));
+
+        Message savedMessage = messageConsumerService.saveMessage(messageWebSocketDto);
+
+        assertNotNull(savedMessage);
+        assertEquals(authorId, savedMessage.getAuthor());
+        assertEquals(recipientId, savedMessage.getRecipient());
+        assertEquals(time, savedMessage.getTime());
+        assertEquals(messageText, savedMessage.getMessageText());
+        assertEquals(Status.SENT, savedMessage.getStatus());
+        assertEquals(dialog, savedMessage.getDialog());
+
+        verify(dialogRepository).findByParticipants(authorId, recipientId);
+        verify(messageRepository).save(any(Message.class));
+    }
+
+    @Test
+    void saveMessage_shouldThrowExceptionWhenDialogNotFound() {
+        UUID authorId = UUID.randomUUID();
+        UUID recipientId = UUID.randomUUID();
+
+        MessageWebSocketRs messageWebSocketRs = MessageWebSocketRs.builder()
+                .conversationPartner1(authorId)
+                .conversationPartner2(recipientId)
+                .build();
+
+        MessageWebSocketDto messageWebSocketDto = MessageWebSocketDto.builder()
+                .recipientId(recipientId)
+                .data(messageWebSocketRs)
+                .build();
+
+        when(dialogRepository.findByParticipants(any(UUID.class), any(UUID.class))).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            messageConsumerService.saveMessage(messageWebSocketDto);
+        });
+
+        verify(messageRepository, never()).save(any(Message.class));
+    }
+
+    @Test
+    void findDialogForConversation_shouldReturnDialogWhenFound() {
+        UUID authorId = UUID.randomUUID();
+        UUID recipientId = UUID.randomUUID();
+        Dialog dialog = mock(Dialog.class);
+
+        when(dialogRepository.findByParticipants(authorId, recipientId)).thenReturn(Optional.of(dialog));
+
+        Dialog foundDialog = messageConsumerService.findDialogForConversation(authorId, recipientId);
+
+        assertNotNull(foundDialog);
+        assertEquals(dialog, foundDialog);
+
+        verify(dialogRepository).findByParticipants(authorId, recipientId);
+    }
+
+    @Test
+    void findDialogForConversation_shouldThrowExceptionWhenDialogNotFound() {
+        UUID authorId = UUID.randomUUID();
+        UUID recipientId = UUID.randomUUID();
+
+        when(dialogRepository.findByParticipants(authorId, recipientId)).thenReturn(Optional.empty());
+
+        assertThrows(NoSuchElementException.class, () -> {
+            messageConsumerService.findDialogForConversation(authorId, recipientId);
+        });
+
+        verify(dialogRepository).findByParticipants(authorId, recipientId);
+    }
+}

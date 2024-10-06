@@ -20,12 +20,14 @@ public class MapperDialogToDto {
             return null;
         }
         List<Message> messages = Optional.ofNullable(dialog.getMessages()).orElse(Collections.emptyList());
+
         Long unreadCount = messages.stream()
                 .filter(message -> message.getStatus().equals(Status.SENT))
                 .count();
 
         ShortMessageForDialogDto lastMessage = messages.stream()
-                .map(MapperMessageToDialogMessageDTO::convertMessageToDto).max(Comparator.comparing(ShortMessageForDialogDto::getTime))
+                .map(MapperMessageToDialogMessageDTO::convertMessageToDto)
+                .max(Comparator.comparing(ShortMessageForDialogDto::getTime))
                 .orElse(null);
 
 

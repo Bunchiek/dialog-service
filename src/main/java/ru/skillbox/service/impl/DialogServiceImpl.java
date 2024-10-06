@@ -47,7 +47,6 @@ public class DialogServiceImpl implements DialogService {
                     .peek(message -> message.setStatus(Status.READ))
                             .toList();
             messageRepository.saveAll(udatedMessages);
-            dialog.setUnreadCount(0L);
             response.setData(SetStatusMessageReadDto.builder().message("OK").build());
 
         } catch (EntityNotFoundException e) {
@@ -135,11 +134,10 @@ public class DialogServiceImpl implements DialogService {
     }
 
     @Transactional
-    private Dialog createDialog(UUID currentUser, UUID companion) {
+    protected Dialog createDialog(UUID currentUser, UUID companion) {
         Dialog dialog = new Dialog();
         dialog.setParticipantOne(currentUser);
         dialog.setParticipantTwo(companion);
-        dialog.setUnreadCount(0L);
         return dialogRepository.save(dialog);
     }
 

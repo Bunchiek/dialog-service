@@ -40,7 +40,7 @@ public class MessageConsumerService {
         return messageRepository.save(message);
     }
 
-    private Dialog findDialogForConversation(UUID author, UUID recipient) {
+    public Dialog findDialogForConversation(UUID author, UUID recipient) {
         return dialogRepository.findByParticipants(author, recipient)
                 .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
     }
