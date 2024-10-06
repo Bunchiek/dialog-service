@@ -25,11 +25,10 @@ public class MapperDialogToDto {
                 .filter(message -> message.getStatus().equals(Status.SENT))
                 .count();
 
-        ShortMessageForDialogDto lastMessage = messages.stream()
+        List<ShortMessageForDialogDto> lastMessage = messages.stream()
                 .map(MapperMessageToDialogMessageDTO::convertMessageToDto)
-                .max(Comparator.comparing(ShortMessageForDialogDto::getTime))
-                .orElse(null);
-
+                .sorted(Comparator.comparing(ShortMessageForDialogDto::getTime).reversed())
+                .toList();
 
         return DialogDto.builder()
                 .id(dialog.getId())
