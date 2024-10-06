@@ -55,7 +55,7 @@ public class MessageBrokerService {
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
 
-            kafkaTemplate.send(topic, MessageNotification.builder()
+            kafkaTemplate.send("notification-topic", MessageNotification.builder()
                     .content(messageWebSocketDTO.getData().getMessageText())
                     .authorId(messageWebSocketDTO.getData().getConversationPartner1().toString())
                     .toUserId(messageWebSocketDTO.getData().getConversationPartner2().toString())
