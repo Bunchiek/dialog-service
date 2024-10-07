@@ -8,10 +8,8 @@ import ru.skillbox.dto.MessageWebSocketDto;
 import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
 import ru.skillbox.entity.Status;
-import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
 
-import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
@@ -19,15 +17,13 @@ import java.util.UUID;
 public class MessageConsumerService {
 
     private final MessageRepository messageRepository;
-    private final DialogRepository dialogRepository;
 
     @Transactional
     @Loggable
-    public Message saveMessage(MessageWebSocketDto messageWebSocketDTO) {
+    public Message saveMessage(MessageWebSocketDto messageWebSocketDTO, Dialog dialog) {
 
         UUID author = messageWebSocketDTO.getData().getConversationPartner1();
         UUID recipient = messageWebSocketDTO.getRecipientId();
-        Dialog dialog = findDialogForConversation(author, recipient);
 
         Message message = new Message();
         message.setTime(messageWebSocketDTO.getData().getTime());
@@ -40,8 +36,5 @@ public class MessageConsumerService {
         return messageRepository.save(message);
     }
 
-    public Dialog findDialogForConversation(UUID author, UUID recipient) {
-        return dialogRepository.findByParticipants(author, recipient)
-                .orElseThrow(() -> new NoSuchElementException("Диалог не найден"));
-    }
+
 }

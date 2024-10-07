@@ -1,8 +1,10 @@
 package ru.skillbox.utils.impl;
 
+import lombok.experimental.UtilityClass;
 import ru.skillbox.dto.ShortMessageForDialogDto;
 import ru.skillbox.entity.Message;
 
+@UtilityClass
 public class MapperMessageToDialogMessageDTO {
 
     public static ShortMessageForDialogDto convertMessageToDto(Message message) {

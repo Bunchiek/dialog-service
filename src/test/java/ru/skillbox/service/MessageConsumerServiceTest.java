@@ -12,7 +12,6 @@ import ru.skillbox.entity.Message;
 import ru.skillbox.entity.Status;
 import ru.skillbox.repository.DialogRepository;
 import ru.skillbox.repository.MessageRepository;
-import ru.skillbox.service.MessageConsumerService;
 
 import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
@@ -64,7 +63,7 @@ class MessageConsumerServiceTest {
         when(dialogRepository.findByParticipants(any(UUID.class), any(UUID.class))).thenReturn(Optional.of(dialog));
         when(messageRepository.save(any(Message.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        Message savedMessage = messageConsumerService.saveMessage(messageWebSocketDto);
+        Message savedMessage = messageConsumerService.saveMessage(messageWebSocketDto, dialog);
 
         assertNotNull(savedMessage);
         assertEquals(authorId, savedMessage.getAuthor());
@@ -74,61 +73,7 @@ class MessageConsumerServiceTest {
         assertEquals(Status.SENT, savedMessage.getStatus());
         assertEquals(dialog, savedMessage.getDialog());
 
-        verify(dialogRepository).findByParticipants(authorId, recipientId);
         verify(messageRepository).save(any(Message.class));
     }
 
-    @Test
-    void saveMessage_shouldThrowExceptionWhenDialogNotFound() {
-        UUID authorId = UUID.randomUUID();
-        UUID recipientId = UUID.randomUUID();
-
-        MessageWebSocketRs messageWebSocketRs = MessageWebSocketRs.builder()
-                .conversationPartner1(authorId)
-                .conversationPartner2(recipientId)
-                .build();
-
-        MessageWebSocketDto messageWebSocketDto = MessageWebSocketDto.builder()
-                .recipientId(recipientId)
-                .data(messageWebSocketRs)
-                .build();
-
-        when(dialogRepository.findByParticipants(any(UUID.class), any(UUID.class))).thenReturn(Optional.empty());
-
-        assertThrows(NoSuchElementException.class, () -> {
-            messageConsumerService.saveMessage(messageWebSocketDto);
-        });
-
-        verify(messageRepository, never()).save(any(Message.class));
-    }
-
-    @Test
-    void findDialogForConversation_shouldReturnDialogWhenFound() {
-        UUID authorId = UUID.randomUUID();
-        UUID recipientId = UUID.randomUUID();
-        Dialog dialog = mock(Dialog.class);
-
-        when(dialogRepository.findByParticipants(authorId, recipientId)).thenReturn(Optional.of(dialog));
-
-        Dialog foundDialog = messageConsumerService.findDialogForConversation(authorId, recipientId);
-
-        assertNotNull(foundDialog);
-        assertEquals(dialog, foundDialog);
-
-        verify(dialogRepository).findByParticipants(authorId, recipientId);
-    }
-
-    @Test
-    void findDialogForConversation_shouldThrowExceptionWhenDialogNotFound() {
-        UUID authorId = UUID.randomUUID();
-        UUID recipientId = UUID.randomUUID();
-
-        when(dialogRepository.findByParticipants(authorId, recipientId)).thenReturn(Optional.empty());
-
-        assertThrows(NoSuchElementException.class, () -> {
-            messageConsumerService.findDialogForConversation(authorId, recipientId);
-        });
-
-        verify(dialogRepository).findByParticipants(authorId, recipientId);
-    }
 }

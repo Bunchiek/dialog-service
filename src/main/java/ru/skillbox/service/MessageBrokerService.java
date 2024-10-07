@@ -16,6 +16,8 @@ import ru.skillbox.entity.Dialog;
 import ru.skillbox.entity.Message;
 import ru.skillbox.repository.DialogRepository;
 
+import java.time.LocalDateTime;
+
 @Component
 @RequiredArgsConstructor
 @Slf4j
@@ -42,15 +44,16 @@ public class MessageBrokerService {
             // Устанавливаем ID диалога в сообщение
             MessageWebSocketRs rs = messageWebSocketDTO.getData();
             rs.setId(currentDialog.getId());
+            rs.setTime(LocalDateTime.now());
             messageWebSocketDTO.setData(rs);
 
             // Сохраняем сообщение
-            Message newMessage = messageConsumerService.saveMessage(messageWebSocketDTO);
+            Message newMessage = messageConsumerService.saveMessage(messageWebSocketDTO, currentDialog);
             messageWebSocketDTO.setId(newMessage.getId());
             log.info("Message saved successfully.");
 
             // Отправка сообщения клиентам через WebSocket
-            String topic = "/topic/" + currentDialog.getId();
+            String topic = "/topic/" + messageWebSocketDTO.getData().getConversationPartner2()+messageWebSocketDTO.getData().getConversationPartner1();
             log.info("Formatted topic path: '{}'", topic);
             messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
@@ -61,7 +64,7 @@ public class MessageBrokerService {
                     .toUserId(messageWebSocketDTO.getData().getConversationPartner2().toString())
                     .notificationType("MESSAGE")
                     .build());
-
+            
             log.info("Message sent to WebSocket topic: {}", topic);
 
 
