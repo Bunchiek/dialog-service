@@ -44,12 +44,11 @@ public class MessageBrokerService {
             // Устанавливаем ID диалога в сообщение
             MessageWebSocketRs rs = messageWebSocketDTO.getData();
             rs.setId(currentDialog.getId());
-            rs.setTime(LocalDateTime.now());
+            rs.setTime(LocalDateTime.now().plusHours(3));
             messageWebSocketDTO.setData(rs);
 
             // Сохраняем сообщение
-            Message newMessage = messageConsumerService.saveMessage(messageWebSocketDTO, currentDialog);
-//            messageWebSocketDTO.setId(newMessage.getId());
+            messageConsumerService.saveMessage(messageWebSocketDTO, currentDialog);
             log.info("Message saved successfully.");
 
             // Отправка сообщения клиентам через WebSocket
