@@ -14,7 +14,6 @@ import java.util.UUID;
 public class MessageWebSocketDto {
 
     private String type;
-    private Long id;
     private UUID recipientId;
     private MessageWebSocketRs data;
 
