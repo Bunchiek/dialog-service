@@ -26,7 +26,7 @@ public class ChatController {
         String routingKey = "topic." + messageWebSocketDTO.getData().getId();
 
         // Отправка сообщения в RabbitMQ
-//        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.EXCHANGE_NAME, routingKey, messageWebSocketDTO);
         log.info("[CONTROLLER] Message sent to RabbitMQ with routing key: " + routingKey);
     }
 }

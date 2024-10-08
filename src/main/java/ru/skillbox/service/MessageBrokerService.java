@@ -55,7 +55,8 @@ public class MessageBrokerService {
             // Отправка сообщения клиентам через WebSocket
             String topic = "/topic/" + messageWebSocketDTO.getData().getConversationPartner2()+messageWebSocketDTO.getData().getConversationPartner1();
             log.info("Formatted topic path: '{}'", topic);
-            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
+
+//            messagingTemplate.convertAndSend(topic, messageWebSocketDTO);
 
 
             kafkaTemplate.send("notification-topic", MessageNotification.builder()
