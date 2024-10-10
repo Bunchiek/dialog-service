@@ -30,10 +30,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests((auth) ->
                         auth
                 .requestMatchers("/api/v1/dialogs/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .requestMatchers("/api/v1/streaming/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-                .requestMatchers("/app/chat.sendMessage/**").hasAnyRole("ADMIN", "USER", "MODERATOR")
-
-                .anyRequest().authenticated()
+                .anyRequest().permitAll()
         )
                 .exceptionHandling(configurer -> configurer.authenticationEntryPoint(jwtAuthenticationEntryPoint))
                 .csrf(AbstractHttpConfigurer::disable)
