@@ -11,10 +11,10 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MapperMessageToDialogMessageDTOTest {
+class MapperMessageToDialogMessageDTOTest {
 
     @Test
-    public void convertMessageToDto_shouldReturnCorrectDto() {
+    void convertMessageToDto_shouldReturnCorrectDto() {
         // Мокируем объект Message
         Message message = Mockito.mock(Message.class);
 
@@ -43,7 +43,7 @@ public class MapperMessageToDialogMessageDTOTest {
     }
 
     @Test
-    public void convertMessageToDto_shouldReturnNullWhenMessageIsNull() {
+    void convertMessageToDto_shouldReturnNullWhenMessageIsNull() {
         // Проверка на случай, если передается null
         ShortMessageForDialogDto dto = MapperMessageToDialogMessageDTO.convertMessageToDto(null);
 

@@ -15,7 +15,7 @@ import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class MapperDialogToDtoTest {
+class MapperDialogToDtoTest {
 
     private Dialog dialog;
     private UUID currentUserId;

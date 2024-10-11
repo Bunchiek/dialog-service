@@ -1,4 +1,4 @@
-package ru.skillbox;
+package ru.skillbox.controller;
 
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.AfterEach;
@@ -29,7 +29,7 @@ import java.util.UUID;
 @AutoConfigureMockMvc
 @Transactional
 @Testcontainers
-public class AbstractTest {
+abstract class AbstractTest {
 
     protected static PostgreSQLContainer<?> postgreSQLContainer;
 

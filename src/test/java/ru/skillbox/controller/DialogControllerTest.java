@@ -3,7 +3,6 @@ package ru.skillbox.controller;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import ru.skillbox.AbstractTest;
 import ru.skillbox.dto.UnreadCountDto;
 
 
@@ -12,7 +11,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class DialogControllerTest extends AbstractTest {
+class DialogControllerTest extends AbstractTest {
 
 
     @Test

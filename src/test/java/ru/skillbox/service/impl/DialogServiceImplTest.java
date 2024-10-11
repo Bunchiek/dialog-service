@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class DialogServiceImplTest {
+class DialogServiceImplTest {
 
     private MockedStatic<GetCurrentUsername> getCurrentUsernameMock;
 
@@ -51,7 +51,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void setStatusMessageRead_shouldUpdateMessagesAndReturnOK() {
+    void setStatusMessageRead_shouldUpdateMessagesAndReturnOK() {
         UUID currentUserId = UUID.randomUUID();
         Long dialogId = 1L;
         Dialog dialog = new Dialog();
@@ -73,7 +73,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void setStatusMessageRead_shouldReturnNokWhenDialogNotFound() {
+    void setStatusMessageRead_shouldReturnNokWhenDialogNotFound() {
         UUID currentUserId = UUID.randomUUID();
         Long dialogId = 1L;
 
@@ -88,7 +88,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void getAllDialogs_shouldReturnDialogsForCurrentUser() {
+    void getAllDialogs_shouldReturnDialogsForCurrentUser() {
         UUID currentUserId = UUID.randomUUID();
         Pageable pageable = PageRequest.of(0, 10);
         List<Dialog> dialogs = List.of(new Dialog());
@@ -106,7 +106,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void getUnreadMessageCount_shouldReturnUnreadMessageCount() {
+    void getUnreadMessageCount_shouldReturnUnreadMessageCount() {
         long unreadCount = 5;
         when(messageRepository.countUnreadMessages(Status.SENT)).thenReturn(unreadCount);
 
@@ -118,7 +118,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void getAllMessages_shouldReturnMessagesForDialog() {
+    void getAllMessages_shouldReturnMessagesForDialog() {
         UUID currentUserId = UUID.randomUUID();
         UUID companionId = UUID.randomUUID();
         Dialog dialog = new Dialog();
@@ -141,7 +141,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void getDialog_shouldReturnExistingDialog() {
+    void getDialog_shouldReturnExistingDialog() {
         UUID currentUserId = UUID.randomUUID();
         UUID companionId = UUID.randomUUID();
         Dialog dialog = new Dialog();
@@ -158,7 +158,7 @@ public class DialogServiceImplTest {
     }
 
     @Test
-    public void getDialog_shouldCreateNewDialogIfNotExists() {
+    void getDialog_shouldCreateNewDialogIfNotExists() {
         UUID currentUserId = UUID.randomUUID();
         UUID companionId = UUID.randomUUID();
         Dialog newDialog = new Dialog();

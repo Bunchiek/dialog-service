@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
-public class MessageConsumerServiceTest {
+class MessageConsumerServiceTest {
 
     @Mock
     private MessageRepository messageRepository;
