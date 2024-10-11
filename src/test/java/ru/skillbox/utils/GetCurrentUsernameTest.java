@@ -14,7 +14,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class GetCurrentUsernameTest {
+public class GetCurrentUsernameTest {
 
     private MockedStatic<SecurityContextHolder> securityContextHolderMock;
 
